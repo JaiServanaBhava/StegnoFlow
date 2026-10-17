@@ -222,6 +222,33 @@ async def api_steganalysis(
     buf.seek(0)
     report["lsb_plane_data_url"] = f"data:image/png;base64,{base64.b64encode(buf.getvalue()).decode('utf-8')}"
 
+    # Compute RGB Pixel Histograms (64 bins for clean Chart.js plotting)
+    rgb_arr = np.array(img.convert("RGB"))
+    r_hist, _ = np.histogram(rgb_arr[:, :, 0], bins=64, range=(0, 256))
+    g_hist, _ = np.histogram(rgb_arr[:, :, 1], bins=64, range=(0, 256))
+    b_hist, _ = np.histogram(rgb_arr[:, :, 2], bins=64, range=(0, 256))
+
+    # Compute Pairs-of-Values (PoVs) Even/Odd Histogram Comparison
+    gray_arr = np.array(img.convert("L")).flatten()
+    gray_hist, _ = np.histogram(gray_arr, bins=256, range=(0, 256))
+    pov_pairs = []
+    for k in range(16):
+        pov_pairs.append({
+            "pair": f"({2*k},{2*k+1})",
+            "even": int(gray_hist[2 * k]),
+            "odd": int(gray_hist[2 * k + 1])
+        })
+
+    report["histogram_analysis"] = {
+        "rgb": {
+            "labels": [str(i * 4) for i in range(64)],
+            "red": r_hist.tolist(),
+            "green": g_hist.tolist(),
+            "blue": b_hist.tolist()
+        },
+        "povs": pov_pairs
+    }
+
     return report
 
 # ----------------- 25+ FORENSIC EFFECTS GALLERY -----------------

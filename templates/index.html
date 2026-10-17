@@ -3,7 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StegnoFlow | Enterprise Cyber Intelligence & Steganography Platform</title>
+  <title>StegnoFlow | Advanced Cyber Intelligence & Steganography Platform</title>
+  <!-- Favicon / Tab Icons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon.png">
+  <link rel="shortcut icon" type="image/png" href="/static/favicon.png">
+  <link rel="apple-touch-icon" href="/static/logo.png">
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,219 +21,270 @@
 </head>
 <body>
 
+  <!-- Background 3D Three.js WebGL Canvas -->
+  <canvas id="bg-3d-canvas"></canvas>
+
   <!-- Top 3D Animated Navbar -->
   <nav class="navbar">
-    <div class="brand">
-      <div class="brand-logo-3d">
-        <div class="logo-face">🛡️</div>
-      </div>
-      <div class="brand-text">
-        <h1>STEGNOFLOW // V2.5</h1>
-        <span>CYBER INTELLIGENCE & FORENSIC STEGANALYSIS</span>
+    <div class="brand-wrapper">
+      <button id="sidebar-toggle" class="sidebar-toggle-btn" title="Toggle Navigation Menu" type="button">
+        ☰
+      </button>
+
+      <div class="brand">
+        <div class="brand-logo-3d">
+          <img src="/static/logo.png" alt="StegnoFlow Defense Cyber Logo" class="brand-logo-img">
+        </div>
+        <div class="brand-text">
+          <h1>STEGNOFLOW</h1>
+          <span>DEFENSE STEGANOGRAPHY & FORENSIC SUITE</span>
+        </div>
       </div>
     </div>
+
     <div class="nav-badges">
       <div class="badge pulse">CORE RUNTIME ACTIVE</div>
       <div class="badge">AES-256-GCM AEAD</div>
       <div class="badge">PRNG SCATTER: ONLINE</div>
-      <div class="badge">HMAC-SHA256 SENTINEL</div>
       <button id="sound-toggle" class="sound-toggle-btn">🔊 AUDIO: ON</button>
     </div>
   </nav>
 
-  <div class="app-container">
-    <!-- Sidebar Navigation -->
-    <aside class="sidebar">
+  <div class="app-container sidebar-collapsed" id="app-container">
+    <!-- Mobile Frosted Backdrop Overlay -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="toggleSidebar(event)"></div>
+
+    <!-- Collapsible Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
       <div class="nav-category">EXECUTIVE COMMAND</div>
       <a href="#" class="nav-item active" data-target="panel-dashboard">
         <span class="icon">⚡</span> Unified Dashboard
       </a>
+      <a href="#" class="nav-item" data-target="panel-steganalysis" id="nav-steganalysis">
+        <span class="icon">🔬</span> Deep Steganalysis (χ² Lab)
+      </a>
+      <a href="#" class="nav-item" data-target="panel-batch-scanner" id="nav-batch-scanner">
+        <span class="icon">🛰️</span> Batch Mass Scanner
+      </a>
 
       <div class="nav-category">MULTI-MEDIUM ENCODING</div>
-      <a href="#" class="nav-item" data-target="panel-image-stego">
-        <span class="icon">🖼️</span> Image Steganography
+      <a href="#" class="nav-item" data-target="panel-image-stego" id="nav-image-stego">
+        <span class="icon">🖼️</span> Image LSB Studio
       </a>
-      <a href="#" class="nav-item" data-target="panel-pdf-stego">
+      <a href="#" class="nav-item" data-target="panel-pdf-stego" id="nav-pdf-stego">
         <span class="icon">📄</span> PDF Document Stego
       </a>
-      <a href="#" class="nav-item" data-target="panel-text-stego">
+      <a href="#" class="nav-item" data-target="panel-text-stego" id="nav-text-stego">
         <span class="icon">📝</span> Invisible Zero-Width Text
       </a>
-      <a href="#" class="nav-item" data-target="panel-audio-stego">
-        <span class="icon">🎵</span> Audio WAV Steganography
+      <a href="#" class="nav-item" data-target="panel-audio-stego" id="nav-audio-stego">
+        <span class="icon">🎵</span> Audio WAV Stego
       </a>
-      <a href="#" class="nav-item" data-target="panel-eof-stego">
+      <a href="#" class="nav-item" data-target="panel-eof-stego" id="nav-eof-stego">
         <span class="icon">📦</span> Polyglot / File Carving
       </a>
 
-      <div class="nav-category">FORENSIC STEGANALYSIS</div>
-      <a href="#" class="nav-item" data-target="panel-steganalysis">
-        <span class="icon">🔬</span> Chi-Square (χ²) Lab
-      </a>
-      <a href="#" class="nav-item" data-target="panel-batch-scanner">
-        <span class="icon">🛰️</span> Batch Stego Scanner
-      </a>
-      <a href="#" class="nav-item" data-target="panel-effects">
-        <span class="icon">🎨</span> 26+ Forensic Effects
-      </a>
-      <a href="#" class="nav-item" data-target="panel-split-compare">
-        <span class="icon">👁️</span> Split Comparison Slider
-      </a>
-
-      <!-- 3D Holographic Viewport Widget -->
+      <!-- 3D Prototype Holographic Model in Sidebar -->
       <div class="hologram-card">
-        <h4>// 3D CRYPTO COPROCESSOR</h4>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <h4>// 3D CRYPTO COPROCESSOR</h4>
+          <span class="pill" style="font-size:0.6rem;color:var(--neon-green);background:rgba(0,255,136,0.12);padding:2px 6px;border-radius:4px;">PROTOTYPE</span>
+        </div>
         <div id="three-viewport"></div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px;font-size:0.65rem;color:var(--cyan);font-family:var(--font-mono);margin-top:6px;letter-spacing:0.5px;">
+          <span style="width:6px;height:6px;background:var(--neon-green);border-radius:50%;box-shadow:0 0 6px var(--neon-green);"></span>
+          QUANTUM ENGINE ACTIVE
+        </div>
       </div>
     </aside>
 
     <!-- Main Workspace Area -->
-    <main class="main-content">
+    <main class="main-content" id="main-content">
 
-      <!-- ================= 0. UNIFIED DASHBOARD ================= -->
+      <!-- ================= 0. SINGLE MONOLITH 3D DASHBOARD ================= -->
       <section id="panel-dashboard" class="section-panel active">
-        <div class="section-header">
-          <h2>⚡ Unified Command Center & Rapid Ingestion Hub</h2>
-          <p>Drop any medium (Image, Audio WAV, PDF, Text, or Binary payload) for instant analysis, auto-detection, and military encryption.</p>
-        </div>
-
-        <!-- Telemetry Summary -->
-        <div class="grid-4" style="margin-bottom:24px;">
-          <div class="metric-tile">
-            <div class="label">System Integrity</div>
-            <div class="val" style="color:var(--neon-green)">100% SECURE</div>
-          </div>
-          <div class="metric-tile">
-            <div class="label">Active Cipher</div>
-            <div class="val">AES-256-GCM</div>
-          </div>
-          <div class="metric-tile">
-            <div class="label">PBKDF2 Rounds</div>
-            <div class="val">200,000</div>
-          </div>
-          <div class="metric-tile">
-            <div class="label">Detection Engine</div>
-            <div class="val" style="color:var(--cyan)">χ² Chi-Square</div>
-          </div>
-        </div>
-
-        <div class="grid-2">
-          <!-- Universal Drag and Drop Hub -->
-          <div class="glass-card">
-            <h3 style="color:var(--cyan);margin-bottom:12px;font-size:1.1rem;">📥 Universal Carrier Ingestion Hub</h3>
-            <p style="color:var(--text-muted);font-size:0.8rem;margin-bottom:14px;">
-              Supports PNG, JPG, WAV Audio, PDF documents, and Raw Binary files.
-            </p>
-
-            <div class="dropzone" id="dash-dropzone" data-preview="dash-carrier-preview">
-              <input type="file" id="dash-carrier-file">
-              <div class="dropzone-icon">🚀</div>
-              <div class="dropzone-text" id="dash-drop-text">Drag & Drop Any Carrier File (Image / Audio / PDF)</div>
-              <div class="dropzone-sub">Automatic MIME detection & integrity fingerprinting</div>
-            </div>
-
-            <!-- Carrier Preview Box -->
-            <div id="dash-carrier-preview" class="preview-box" style="min-height:160px;max-height:220px;">
-              <span style="color:var(--text-muted);font-size:0.8rem;font-family:var(--font-mono)">[Carrier Ingestion Preview]</span>
-            </div>
-
-            <!-- Hash Fingerprint Card -->
-            <div style="background:rgba(6,9,17,0.7);padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);margin-top:14px;font-family:var(--font-mono);font-size:0.75rem;">
-              <div style="color:var(--cyan);margin-bottom:4px;">CRYPTOGRAPHIC FINGERPRINT:</div>
-              <div id="dash-hash-sha256" style="color:var(--text-main);word-break:break-all;">SHA-256: Waiting for file ingestion...</div>
-              <div id="dash-hash-md5" style="color:var(--text-muted);margin-top:2px;">MD5: --</div>
-            </div>
-
-            <!-- EXIF Sanitizer Button -->
-            <button class="btn btn-secondary btn-block" style="margin-top:12px;" onclick="sanitizeUploadedImage()">
-              🧹 Strip EXIF & Geolocation Metadata
-            </button>
-          </div>
-
-          <!-- Rapid Payload Configurator -->
-          <div class="glass-card">
-            <h3 style="color:var(--magenta);margin-bottom:12px;font-size:1.1rem;">🔐 Secret Payload & Defense Configuration</h3>
-
-            <div class="form-group">
-              <label>Confidential Secret Payload (Text or Binary Data)</label>
-              <textarea id="dash-payload-text" class="form-control" rows="3" placeholder="Enter secret message, intelligence coordinates, or credentials to embed..."></textarea>
-            </div>
-
-            <div class="form-group">
-              <label>Military AES-256-GCM Passphrase</label>
-              <input type="password" id="dash-passphrase" class="form-control" placeholder="Enter high-entropy encryption key..." oninput="checkPasswordEntropy(this.value)">
-              <div class="entropy-bar-track">
-                <div id="entropy-bar" class="entropy-bar-fill"></div>
+        <div class="monolith-wrapper">
+          <div class="monolith-card card-3d-tilt">
+            <div class="monolith-header">
+              <div class="monolith-title-group">
+                <img src="/static/logo.png" alt="StegnoFlow Core" class="monolith-mini-logo">
+                <div>
+                  <h2 style="margin:0;font-size:1.35rem;font-weight:800;letter-spacing:1px;color:#fff;">STEGNOFLOW UNIFIED ENGINE</h2>
+                  <p style="margin:3px 0 0 0;font-size:0.75rem;color:var(--text-muted);font-family:var(--font-mono);">
+                    Dual-Layer Cryptographic Steganography &bull; Smart Carrier Auto-Routing
+                  </p>
+                </div>
               </div>
-              <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:0.7rem;font-family:var(--font-mono);">
-                <span id="entropy-text" style="color:var(--text-muted);">Entropy: 0 bits</span>
-                <span id="entropy-verdict" style="color:var(--text-muted);">Rating: NONE</span>
+              <div class="monolith-badge" style="display:flex;align-items:center;gap:6px;background:rgba(0,242,254,0.1);border:1px solid rgba(0,242,254,0.3);padding:6px 12px;border-radius:20px;font-size:0.72rem;font-family:var(--font-mono);color:var(--cyan);">
+                <span class="badge-dot" style="width:8px;height:8px;background:var(--neon-green);border-radius:50%;box-shadow:0 0 6px var(--neon-green);"></span>
+                AES-256-GCM READY
               </div>
             </div>
 
-            <div class="grid-2" style="gap:12px;">
-              <button class="btn btn-primary btn-block" onclick="executeDashboardHide()">
-                🚀 1-Click Encrypt & Hide
+            <!-- 1. BIG UPLOAD BUTTON / DROPZONE ON TOP -->
+            <div class="big-upload-zone" id="monolith-dropzone">
+              <input type="file" id="monolith-file-input">
+              <svg class="upload-icon-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="32" cy="32" r="30" stroke="url(#cyan-grad)" stroke-width="2" stroke-dasharray="4 4"/>
+                <path d="M32 18V42M32 18L22 28M32 18L42 28" stroke="var(--cyan)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18 46H46" stroke="var(--magenta)" stroke-width="3" stroke-linecap="round"/>
+                <defs>
+                  <linearGradient id="cyan-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#00f2fe"/>
+                    <stop offset="100%" stop-color="#4facfe"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div class="upload-primary-text" id="monolith-drop-title">CLICK OR DROP ANY CARRIER FILE HERE</div>
+              <div class="upload-sub-text" id="monolith-drop-sub">
+                Supports Images (PNG, JPG), PDF Documents, WAV Audio, Polyglot Files &bull; Auto-routes to dedicated module
+              </div>
+              <div id="monolith-file-info" style="display:none;margin-top:12px;font-family:var(--font-mono);font-size:0.8rem;color:var(--cyan);background:rgba(0,242,254,0.15);padding:8px 14px;border-radius:8px;border:1px solid var(--cyan);">
+                📁 Detected: <span id="monolith-file-name" style="font-weight:700;color:#fff;"></span> (<span id="monolith-file-size"></span>) &bull; <button type="button" onclick="clearActiveCarrier(event)" style="background:none;border:none;color:var(--crimson);cursor:pointer;font-weight:bold;font-family:var(--font-mono);font-size:0.75rem;">[✕ Remove Carrier]</button>
+              </div>
+            </div>
+
+            <!-- 2. VISIBLE COVER TEXT -->
+            <div class="monolith-form-group">
+              <label>
+                <span>Carrier Plaintext / Cover Article</span>
+                <span class="pill" style="font-size:0.62rem;background:rgba(0,242,254,0.15);color:var(--cyan);">VISIBLE COVER TEXT</span>
+              </label>
+              <textarea id="monolith-text-input" class="monolith-textarea" rows="2" placeholder="Enter public cover message (or paste stego text to decrypt)...">The global defense cybersecurity conference proceedings are scheduled to commence tomorrow at 09:00 AM UTC. All intelligence delegates must verify their encrypted credentials prior to entry.</textarea>
+            </div>
+
+            <!-- 2b. SECRET MESSAGE TO HIDE -->
+            <div class="monolith-form-group">
+              <label>
+                <span>Secret Message to Hide</span>
+                <span class="pill" style="font-size:0.62rem;background:rgba(255,0,127,0.2);color:var(--magenta);border:1px solid rgba(255,0,127,0.35);">INVISIBLY EMBEDDED</span>
+              </label>
+              <textarea id="monolith-secret-input" class="monolith-textarea" rows="2" placeholder="Type confidential secret message to hide invisibly inside the carrier text...">TOP SECRET INTEL: Rendezvous coordinates verified at Alpha Sector-7. Mission clearance authorized.</textarea>
+            </div>
+
+            <!-- 3. PASSWORD INPUT (BELOW TEXT) WITH BADGE -->
+            <div class="monolith-form-group">
+              <label>
+                <span>Encryption Password / Key</span>
+                <span id="password-badge" class="pill" style="background:rgba(255,200,0,0.15);color:#ffd700;border:1px solid rgba(255,215,0,0.3);font-size:0.68rem;">
+                  ⚠️ Mandatory for Text &bull; Optional for Files
+                </span>
+              </label>
+              <input type="password" id="monolith-password" class="monolith-input" placeholder="Enter key (required for text stego)..." value="AlphaBravo99!" oninput="checkMonolithPasswordEntropy(this.value)">
+              <div class="entropy-track-monolith">
+                <div id="monolith-entropy-bar" class="entropy-fill-monolith" style="width:80%;background:var(--neon-green)"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:0.68rem;font-family:var(--font-mono);">
+                <span id="monolith-entropy-text" style="color:var(--text-muted);">Entropy: 78 bits</span>
+                <span id="monolith-entropy-verdict" style="color:var(--neon-green);">Rating: STRONG</span>
+              </div>
+            </div>
+
+            <!-- 4. ENCRYPT & DECRYPT BUTTONS (BELOW PASSWORD) -->
+            <div class="action-buttons-row">
+              <button class="btn-monolith-primary cyber-btn-3d" id="btn-monolith-encrypt" onclick="executeMonolithEncrypt()" type="button">
+                <span class="cyber-btn-shimmer"></span>
+                <span class="cyber-btn-content">
+                  <span class="cyber-btn-icon-box">
+                    <svg class="cyber-btn-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                      <circle cx="12" cy="16" r="1.5"></circle>
+                    </svg>
+                  </span>
+                  <span class="cyber-btn-text">
+                    <span class="cyber-btn-title">ENCRYPT &amp; CONCEAL</span>
+                    <span class="cyber-btn-subtitle">AES-256 ZERO-WIDTH INJECTION</span>
+                  </span>
+                </span>
               </button>
-              <button class="btn btn-secondary btn-block" onclick="executeDashboardExtract()">
-                🔍 1-Click Extract & Decrypt
+
+              <button class="btn-monolith-secondary cyber-btn-3d" id="btn-monolith-decrypt" onclick="executeMonolithDecrypt()" type="button">
+                <span class="cyber-btn-shimmer"></span>
+                <span class="cyber-btn-content">
+                  <span class="cyber-btn-icon-box">
+                    <svg class="cyber-btn-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="11" cy="11" r="8"></circle>
+                      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                      <line x1="11" y1="8" x2="11" y2="14"></line>
+                      <line x1="8" y1="11" x2="14" y2="11"></line>
+                    </svg>
+                  </span>
+                  <span class="cyber-btn-text">
+                    <span class="cyber-btn-title">DECRYPT &amp; EXTRACT</span>
+                    <span class="cyber-btn-subtitle">ZERO-WIDTH SCAN &amp; RECOVERY</span>
+                  </span>
+                </span>
               </button>
             </div>
 
-            <div class="form-group" style="margin-top:16px;">
-              <label>Decrypted Output / Telemetry Log</label>
-              <textarea id="dash-result-text" class="form-control" rows="3" readonly placeholder="Decrypted payload or operational telemetry will appear here..."></textarea>
+            <!-- 5. OUTPUT / RESULT AREA (BELOW BUTTONS) -->
+            <div class="monolith-result-box" id="monolith-result-box">
+              <div class="result-header">
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span class="status-indicator" style="width:8px;height:8px;background:var(--neon-green);border-radius:50%;box-shadow:0 0 8px var(--neon-green);"></span>
+                  <strong style="color:var(--neon-green);font-family:var(--font-mono);font-size:0.82rem;" id="monolith-result-title">
+                    SUCCESS &bull; OUTPUT PAYLOAD
+                  </strong>
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <button class="btn-copy cyber-action-pill" onclick="copyMonolithResult()" type="button">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    <span>Copy Payload</span>
+                  </button>
+                  <button id="monolith-share-btn" class="btn-copy cyber-action-pill share-pill" style="display:none;" onclick="shareMonolithResult()" type="button">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                    <span>Share Securely</span>
+                  </button>
+                  <a id="monolith-download-link" class="btn-copy cyber-action-pill dl-pill" style="display:none;text-decoration:none;" download>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    <span>Download (.TXT)</span>
+                  </a>
+                </div>
+              </div>
+              <textarea id="monolith-result-text" class="monolith-textarea" rows="3" readonly style="color:var(--neon-green);background:rgba(0,0,0,0.6);border-color:rgba(0,255,102,0.3);"></textarea>
+              <div id="monolith-result-metrics" style="margin-top:8px;font-family:var(--font-mono);font-size:0.7rem;color:var(--cyan);display:flex;gap:16px;"></div>
             </div>
 
-            <a id="dash-download-btn" class="btn btn-magenta btn-block" style="display:none;margin-top:10px;">
-              ⬇️ Download Protected Stego Output
-            </a>
-          </div>
-        </div>
-
-        <!-- Live Operational Terminal Log Console -->
-        <div class="glass-card" style="margin-top:10px;">
-          <h4 style="color:var(--neon-green);margin-bottom:8px;font-size:0.85rem;font-family:var(--font-mono);">
-            // LIVE CRYPTOGRAPHIC AUDIT CONSOLE
-          </h4>
-          <div id="audit-log" class="audit-terminal">
-            <div class="log-entry"><span class="log-time">[00:00:01]</span> System initialized. Cryptographic hardware primitives loaded.</div>
-            <div class="log-entry"><span class="log-time">[00:00:02]</span> AES-256-GCM authenticated cipher engine bound with PBKDF2 (200k rounds).</div>
-            <div class="log-entry"><span class="log-time">[00:00:03]</span> Westfeld & Pfitzmann Chi-Square detection models primed for inspection.</div>
           </div>
         </div>
       </section>
 
       <!-- ================= 1. IMAGE STEGANOGRAPHY ================= -->
       <section id="panel-image-stego" class="section-panel">
-        <div class="section-header">
-          <h2>🖼️ Image Steganography Studio (LSB + PRNG Scattering)</h2>
-          <p>Carrier embedding with multi-channel selection, 1-4 bit depth modulation, and spatial PRNG keystream permutation.</p>
-        </div>
+        <div class="unified-stego-card card-3d-tilt">
+          <div class="mode-switch-3d">
+            <button class="mode-tab-btn active" id="btn-mode-img-hide" onclick="switchUnifiedMode('img', 'hide')">
+              🔒 ENCRYPT & HIDE
+            </button>
+            <button class="mode-tab-btn" id="btn-mode-img-extract" onclick="switchUnifiedMode('img', 'extract')">
+              🔓 DECRYPT & EXTRACT
+            </button>
+          </div>
 
-        <div class="grid-2">
-          <div class="glass-card">
-            <h3 style="color:var(--cyan);margin-bottom:14px;font-size:1.05rem;">🔒 Hide Secret Message / File</h3>
+          <!-- Image Hide Pane -->
+          <div id="pane-img-hide" class="stego-pane active">
+            <h3 style="color:var(--cyan);margin-bottom:12px;font-size:1.05rem;">Image Carrier Ingestion & Embedding</h3>
             <div class="dropzone" data-preview="img-hide-preview">
               <input type="file" id="img-hide-carrier" accept="image/png,image/jpeg">
               <div class="dropzone-icon">📁</div>
               <div class="dropzone-text">Click or Drop Carrier Image Here (PNG/JPG)</div>
             </div>
-            <div id="img-hide-preview" class="preview-box">
+            <div id="img-hide-preview" class="preview-box" style="min-height:160px;max-height:220px;">
               <span style="color:var(--text-muted);font-size:0.8rem;font-family:var(--font-mono)">[Carrier Image Preview]</span>
             </div>
 
-            <div class="form-group" style="margin-top:14px;">
+            <div class="form-group" style="margin-top:12px;">
               <label>Confidential Payload Text</label>
-              <textarea id="img-hide-text" class="form-control" placeholder="Type confidential message to embed..."></textarea>
+              <textarea id="img-hide-text" class="form-control" rows="2" placeholder="Type confidential message to embed...">TOP SECRET: High-priority telemetry transfer approved.</textarea>
             </div>
 
             <div class="form-group">
-              <label>AES-256-GCM Passphrase (Optional)</label>
-              <input type="password" id="img-hide-pass" class="form-control" placeholder="Encryption key...">
+              <label>AES-256-GCM Passphrase <span class="pill" style="font-size:0.65rem;color:var(--cyan);background:rgba(0,242,254,0.1);">OPTIONAL</span></label>
+              <input type="password" id="img-hide-pass" class="form-control" value="SecureKey2026!">
             </div>
 
-            <div class="grid-2" style="gap:12px;">
+            <div class="grid-2" style="gap:10px;">
               <div class="form-group">
                 <label>Bits Per Channel</label>
                 <select id="img-hide-bits" class="form-control">
@@ -244,91 +300,45 @@
                   <option value="R">Red Only</option>
                   <option value="G">Green Only</option>
                   <option value="B">Blue Only</option>
-                  <option value="RG">Red + Green</option>
                 </select>
               </div>
             </div>
 
-            <div class="form-group" style="display:flex;align-items:center;gap:10px;">
-              <input type="checkbox" id="img-hide-scatter" checked style="accent-color:var(--cyan);width:16px;height:16px;">
-              <label for="img-hide-scatter" style="margin-bottom:0;cursor:pointer;color:var(--text-main);">
-                Enable PRNG Spatial Scattering (Anti-Sequential Detection)
-              </label>
-            </div>
-
             <button class="btn btn-primary btn-block" onclick="executeImageHide()">🚀 Encode & Encrypt Carrier</button>
-            <div id="img-hide-status" style="font-family:var(--font-mono);font-size:0.78rem;margin-top:10px;color:var(--cyan);"></div>
-          </div>
+            <div id="img-hide-status" style="font-family:var(--font-mono);font-size:0.75rem;margin-top:8px;color:var(--cyan);"></div>
 
-          <div class="glass-card">
-            <h3 style="color:var(--magenta);margin-bottom:14px;font-size:1.05rem;">📊 Visual Degradation Telemetry</h3>
-            <div class="grid-3">
-              <div class="metric-tile">
-                <div class="label">PSNR Stealth</div>
-                <div id="metric-psnr" class="val">-- dB</div>
-              </div>
-              <div class="metric-tile">
-                <div class="label">SSIM Index</div>
-                <div id="metric-ssim" class="val">--</div>
-              </div>
-              <div class="metric-tile">
-                <div class="label">Capacity Used</div>
-                <div id="metric-rate" class="val">-- %</div>
-              </div>
-            </div>
-
-            <div id="img-hide-out-preview" class="preview-box">
+            <div id="img-hide-out-preview" class="preview-box" style="min-height:140px;max-height:200px;margin-top:12px;">
               <span style="color:var(--text-muted);font-size:0.8rem;font-family:var(--font-mono)">[Stego Image Output]</span>
             </div>
+            <a id="img-hide-download" class="btn btn-secondary btn-block" style="display:none;margin-top:10px;">⬇️ Download Stego Image (Lossless PNG)</a>
+            <button id="img-hide-share-btn" class="btn btn-primary btn-block" style="display:none;margin-top:6px;background:rgba(0,242,254,0.12);border:1px solid var(--cyan);color:var(--cyan);" onclick="shareImageStego()">📤 Share Stego Image</button>
+            <button id="img-hide-analyze-btn" class="btn btn-primary btn-block" style="display:none;margin-top:8px;background:linear-gradient(135deg,var(--magenta),var(--electric-blue));box-shadow:0 4px 0 #7b2cbf, 0 6px 18px rgba(255,0,127,0.4);" onclick="teleportStegoToAnalysis()">
+              🔬 Run Deep Histogram &amp; χ² Steganalysis on This Image ➜
+            </button>
+          </div>
 
-            <a id="img-hide-download" class="btn btn-secondary btn-block" style="display:none;margin-top:14px;">⬇️ Download Stego Image (Lossless PNG)</a>
-
-            <hr style="border:none;border-top:1px solid rgba(255,255,255,0.1);margin:24px 0;">
-
-            <h3 style="color:var(--neon-green);margin-bottom:14px;font-size:1.05rem;">🔓 Extract & Decrypt Payload</h3>
+          <!-- Image Extract Pane -->
+          <div id="pane-img-extract" class="stego-pane">
+            <h3 style="color:var(--neon-green);margin-bottom:12px;font-size:1.05rem;">Extract & Decrypt Payload from Stego Image</h3>
             <div class="dropzone" data-preview="img-extract-preview">
               <input type="file" id="img-extract-file" accept="image/png">
               <div class="dropzone-icon">🔍</div>
               <div class="dropzone-text">Upload Stego Image (PNG) to Extract</div>
             </div>
-
-            <div class="form-group" style="margin-top:14px;">
-              <label>Decryption Password (if encrypted)</label>
-              <input type="password" id="img-extract-pass" class="form-control" placeholder="Enter key...">
+            <div id="img-extract-preview" class="preview-box" style="min-height:160px;max-height:200px;">
+              <span style="color:var(--text-muted);font-size:0.8rem;font-family:var(--font-mono)">[Stego Image Preview]</span>
             </div>
 
-            <div class="grid-2" style="gap:12px;">
-              <div class="form-group">
-                <label>Bits Per Channel</label>
-                <select id="img-extract-bits" class="form-control">
-                  <option value="1" selected>1-Bit</option>
-                  <option value="2">2-Bit</option>
-                  <option value="4">4-Bit</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Channels</label>
-                <select id="img-extract-chan" class="form-control">
-                  <option value="RGB" selected>RGB</option>
-                  <option value="R">Red Only</option>
-                  <option value="G">Green Only</option>
-                  <option value="B">Blue Only</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-group" style="display:flex;align-items:center;gap:10px;">
-              <input type="checkbox" id="img-extract-scatter" checked style="accent-color:var(--cyan);width:16px;height:16px;">
-              <label for="img-extract-scatter" style="margin-bottom:0;cursor:pointer;color:var(--text-main);">
-                Scattered Mode (PRNG enabled)
-              </label>
+            <div class="form-group" style="margin-top:12px;">
+              <label>Decryption Password <span class="pill" style="font-size:0.65rem;color:var(--cyan);background:rgba(0,242,254,0.1);">OPTIONAL</span></label>
+              <input type="password" id="img-extract-pass" class="form-control" value="SecureKey2026!">
             </div>
 
             <button class="btn btn-secondary btn-block" onclick="executeImageExtract()">🔍 Extract Secret Payload</button>
 
-            <div class="form-group" style="margin-top:14px;">
+            <div class="form-group" style="margin-top:12px;">
               <label>Extracted Confidential Content</label>
-              <textarea id="img-extract-result" class="form-control" readonly placeholder="Extracted secret payload will be displayed here..."></textarea>
+              <textarea id="img-extract-result" class="form-control" rows="4" readonly placeholder="Extracted secret payload will appear here..."></textarea>
             </div>
           </div>
         </div>
@@ -336,46 +346,56 @@
 
       <!-- ================= 2. PDF STEGANOGRAPHY ================= -->
       <section id="panel-pdf-stego" class="section-panel">
-        <div class="section-header">
-          <h2>📄 PDF Document Steganography Studio</h2>
-          <p>Embeds encrypted payloads into standard PDF documents via incremental revision and comment streams. Documents display and print normally!</p>
-        </div>
+        <div class="unified-stego-card card-3d-tilt">
+          <div class="mode-switch-3d">
+            <button class="mode-tab-btn active" id="btn-mode-pdf-hide" onclick="switchUnifiedMode('pdf', 'hide')">
+              🔒 INJECT IN PDF
+            </button>
+            <button class="mode-tab-btn" id="btn-mode-pdf-extract" onclick="switchUnifiedMode('pdf', 'extract')">
+              🔓 EXTRACT FROM PDF
+            </button>
+          </div>
 
-        <div class="grid-2">
-          <div class="glass-card">
-            <h3 style="color:var(--cyan);margin-bottom:14px;">🔒 Hide Payload in PDF</h3>
+          <!-- PDF Hide Pane -->
+          <div id="pane-pdf-hide" class="stego-pane active">
+            <h3 style="color:var(--cyan);margin-bottom:12px;">Inject Encrypted Secret into PDF Document</h3>
             <div class="form-group">
               <label>Carrier PDF Document</label>
               <input type="file" id="pdf-carrier-file" class="form-control" accept="application/pdf">
             </div>
             <div class="form-group">
               <label>Confidential Payload Text</label>
-              <textarea id="pdf-hide-text" class="form-control" rows="3" placeholder="Secret intelligence message to inject into PDF stream..."></textarea>
+              <textarea id="pdf-hide-text" class="form-control" rows="3" placeholder="Secret message to inject into PDF stream...">CONFIDENTIAL: Executive intelligence protocol 8841-K approved.</textarea>
             </div>
             <div class="form-group">
-              <label>AES-256-GCM Password</label>
-              <input type="password" id="pdf-hide-pass" class="form-control" placeholder="Optional passphrase...">
+              <label>AES-256-GCM Password <span class="pill" style="font-size:0.65rem;color:var(--cyan);background:rgba(0,242,254,0.1);">OPTIONAL</span></label>
+              <input type="password" id="pdf-hide-pass" class="form-control" value="PdfDefenseKey99!">
             </div>
             <button class="btn btn-primary btn-block" onclick="executePdfHide()">
-              📄 Inject & Download Protected PDF
+              📄 Inject Secret into PDF
             </button>
+            <div id="pdf-hide-success-box" style="display:none;margin-top:10px;">
+              <a id="pdf-hide-dl-btn" class="btn btn-secondary btn-block" style="text-decoration:none;">⬇️ Download Stego PDF Document</a>
+              <button id="pdf-hide-share-btn" class="btn btn-primary btn-block" style="margin-top:6px;background:rgba(0,242,254,0.12);border:1px solid var(--cyan);color:var(--cyan);" onclick="sharePdfStego()">📤 Share Stego PDF</button>
+            </div>
           </div>
 
-          <div class="glass-card">
-            <h3 style="color:var(--neon-green);margin-bottom:14px;">🔓 Extract Payload from PDF</h3>
+          <!-- PDF Extract Pane -->
+          <div id="pane-pdf-extract" class="stego-pane">
+            <h3 style="color:var(--neon-green);margin-bottom:12px;">Extract Hidden Payload from PDF Document</h3>
             <div class="form-group">
               <label>Upload Protected PDF Document</label>
               <input type="file" id="pdf-extract-file" class="form-control" accept="application/pdf">
             </div>
             <div class="form-group">
-              <label>Decryption Password</label>
-              <input type="password" id="pdf-extract-pass" class="form-control">
+              <label>Decryption Password <span class="pill" style="font-size:0.65rem;color:var(--cyan);background:rgba(0,242,254,0.1);">OPTIONAL</span></label>
+              <input type="password" id="pdf-extract-pass" class="form-control" value="PdfDefenseKey99!">
             </div>
             <button class="btn btn-secondary btn-block" onclick="executePdfExtract()">
               🔍 Scan & Extract Secret Payload
             </button>
 
-            <div class="form-group" style="margin-top:14px;">
+            <div class="form-group" style="margin-top:12px;">
               <label>Extracted Secret Message</label>
               <textarea id="pdf-extract-result" class="form-control" rows="4" readonly></textarea>
             </div>
@@ -385,14 +405,19 @@
 
       <!-- ================= 3. INVISIBLE ZERO-WIDTH TEXT ================= -->
       <section id="panel-text-stego" class="section-panel">
-        <div class="section-header">
-          <h2>📝 Invisible Zero-Width Text Steganography</h2>
-          <p>Encodes secret binary payloads completely invisibly inside ordinary text using Unicode zero-width characters.</p>
-        </div>
+        <div class="unified-stego-card card-3d-tilt">
+          <div class="mode-switch-3d">
+            <button class="mode-tab-btn active" id="btn-mode-txt-hide" onclick="switchUnifiedMode('txt', 'hide')">
+              🔒 HIDE IN TEXT
+            </button>
+            <button class="mode-tab-btn" id="btn-mode-txt-extract" onclick="switchUnifiedMode('txt', 'extract')">
+              🔓 EXTRACT FROM TEXT
+            </button>
+          </div>
 
-        <div class="grid-2">
-          <div class="glass-card">
-            <h3 style="color:var(--cyan);margin-bottom:14px;">🔒 Hide Invisible Message in Text</h3>
+          <!-- Text Hide Pane -->
+          <div id="pane-txt-hide" class="stego-pane active">
+            <h3 style="color:var(--cyan);margin-bottom:12px;">Hide Invisible Zero-Width Characters in Cover Text</h3>
             <div class="form-group">
               <label>Innocent Cover Text (Visible to everyone)</label>
               <textarea id="txt-cover" class="form-control" rows="3">The annual cybersecurity defense symposium is officially scheduled for next Monday at 10:00 AM.</textarea>
@@ -402,30 +427,31 @@
               <input type="text" id="txt-secret" class="form-control" value="CRITICAL: Authentication token 9283-XK-7719 approved.">
             </div>
             <div class="form-group">
-              <label>AES-256-GCM Password (Optional)</label>
-              <input type="password" id="txt-pass" class="form-control" placeholder="Encryption key...">
+              <label>AES-256-GCM Password <span class="pill" style="font-size:0.65rem;color:#ffd700;background:rgba(255,215,0,0.15);">MANDATORY</span></label>
+              <input type="password" id="txt-pass" class="form-control" value="TextSecretKey!">
             </div>
             <button class="btn btn-primary btn-block" onclick="executeTextHide()">✨ Inject Invisible Characters</button>
 
-            <div class="form-group" style="margin-top:14px;">
+            <div class="form-group" style="margin-top:12px;">
               <label>Stego Text (Copy & Paste Anywhere - Invisible to Human Eye!)</label>
-              <textarea id="txt-stego-out" class="form-control" rows="4" readonly></textarea>
+              <textarea id="txt-stego-out" class="form-control" rows="3" readonly></textarea>
             </div>
           </div>
 
-          <div class="glass-card">
-            <h3 style="color:var(--neon-green);margin-bottom:14px;">🔓 Extract Secret from Text</h3>
+          <!-- Text Extract Pane -->
+          <div id="pane-txt-extract" class="stego-pane">
+            <h3 style="color:var(--neon-green);margin-bottom:12px;">Extract Invisible Message from Text</h3>
             <div class="form-group">
               <label>Paste Stego Text to Inspect</label>
               <textarea id="txt-stego-in" class="form-control" rows="5" placeholder="Paste suspected text with zero-width characters..."></textarea>
             </div>
             <div class="form-group">
-              <label>Decryption Password (if encrypted)</label>
-              <input type="password" id="txt-extract-pass" class="form-control" placeholder="Enter key...">
+              <label>Decryption Password <span class="pill" style="font-size:0.65rem;color:#ffd700;background:rgba(255,215,0,0.15);">MANDATORY</span></label>
+              <input type="password" id="txt-extract-pass" class="form-control" value="TextSecretKey!">
             </div>
             <button class="btn btn-secondary btn-block" onclick="executeTextExtract()">🔍 Scan & Decrypt Invisible Message</button>
 
-            <div class="form-group" style="margin-top:14px;">
+            <div class="form-group" style="margin-top:12px;">
               <label>Revealed Confidential Message</label>
               <textarea id="txt-revealed-out" class="form-control" rows="4" readonly placeholder="Extracted text appears here..."></textarea>
             </div>
@@ -435,22 +461,25 @@
 
       <!-- ================= 4. AUDIO WAV STEGANOGRAPHY ================= -->
       <section id="panel-audio-stego" class="section-panel">
-        <div class="section-header">
-          <h2>🎵 Audio WAV PCM Steganography Studio</h2>
-          <p>Embeds encrypted payloads into 16-bit uncompressed WAV PCM audio samples with imperceptible SNR degradation.</p>
-        </div>
+        <div class="unified-stego-card card-3d-tilt">
+          <div class="mode-switch-3d">
+            <button class="mode-tab-btn active" id="btn-mode-aud-hide" onclick="switchUnifiedMode('aud', 'hide')">
+              🎙️ EMBED IN AUDIO
+            </button>
+            <button class="mode-tab-btn" id="btn-mode-aud-extract" onclick="switchUnifiedMode('aud', 'extract')">
+              🔍 EXTRACT FROM AUDIO
+            </button>
+          </div>
 
-        <div class="grid-2">
-          <div class="glass-card">
-            <h3 style="color:var(--cyan);margin-bottom:14px;">🎙️ Embed Payload in Audio</h3>
-            
-            <!-- Synthetic Tone Generator Helper -->
-            <div style="background:rgba(0,242,254,0.06);border:1px solid rgba(0,242,254,0.2);padding:10px;border-radius:8px;margin-bottom:14px;">
-              <span style="font-size:0.75rem;color:var(--cyan);font-family:var(--font-mono)">DON'T HAVE A WAV FILE? GENERATE ONE:</span>
+          <!-- Audio Hide Pane -->
+          <div id="pane-aud-hide" class="stego-pane active">
+            <h3 style="color:var(--cyan);margin-bottom:12px;">Embed Encrypted Payload into 16-bit WAV PCM Audio</h3>
+            <div style="background:rgba(0,242,254,0.06);border:1px solid rgba(0,242,254,0.2);padding:10px;border-radius:8px;margin-bottom:12px;">
+              <span style="font-size:0.72rem;color:var(--cyan);font-family:var(--font-mono)">DON'T HAVE A WAV FILE? GENERATE ONE:</span>
               <div style="display:flex;gap:8px;margin-top:6px;">
-                <button class="btn btn-secondary" style="padding:6px 12px;font-size:0.75rem;" onclick="generateSynthAudio('ambient')">Cyber Ambient</button>
-                <button class="btn btn-secondary" style="padding:6px 12px;font-size:0.75rem;" onclick="generateSynthAudio('sine')">440Hz Sine</button>
-                <button class="btn btn-secondary" style="padding:6px 12px;font-size:0.75rem;" onclick="generateSynthAudio('binaural')">Binaural Beat</button>
+                <button class="btn btn-secondary" style="padding:5px 10px;font-size:0.72rem;" onclick="generateSynthAudio('ambient')">Cyber Ambient</button>
+                <button class="btn btn-secondary" style="padding:5px 10px;font-size:0.72rem;" onclick="generateSynthAudio('sine')">440Hz Sine</button>
+                <button class="btn btn-secondary" style="padding:5px 10px;font-size:0.72rem;" onclick="generateSynthAudio('binaural')">Binaural Beat</button>
               </div>
             </div>
 
@@ -460,31 +489,33 @@
             </div>
             <div class="form-group">
               <label>Secret Message</label>
-              <textarea id="aud-secret-msg" class="form-control" rows="3" placeholder="Secret message to embed into waveform..."></textarea>
+              <textarea id="aud-secret-msg" class="form-control" rows="2" placeholder="Secret message to embed into waveform...">Audio covert channel established.</textarea>
             </div>
             <div class="form-group">
-              <label>AES-256-GCM Password (Optional)</label>
-              <input type="password" id="aud-pass" class="form-control">
+              <label>AES-256-GCM Password <span class="pill" style="font-size:0.65rem;color:var(--cyan);background:rgba(0,242,254,0.1);">OPTIONAL</span></label>
+              <input type="password" id="aud-pass" class="form-control" value="AudioKey77!">
             </div>
             <button class="btn btn-primary btn-block" onclick="executeAudioHide()">🎙️ Embed in WAV Audio</button>
 
-            <audio id="aud-stego-player" controls style="display:none;"></audio>
-            <a id="aud-download" class="btn btn-secondary btn-block" style="display:none;margin-top:10px;">⬇️ Download Stego WAV</a>
+            <audio id="aud-stego-player" controls style="display:none;margin-top:10px;"></audio>
+            <a id="aud-download" class="btn btn-secondary btn-block" style="display:none;margin-top:8px;">⬇️ Download Stego WAV</a>
+            <button id="aud-share-btn" class="btn btn-primary btn-block" style="display:none;margin-top:6px;background:rgba(0,242,254,0.12);border:1px solid var(--cyan);color:var(--cyan);" onclick="shareAudioStego()">📤 Share Stego WAV</button>
           </div>
 
-          <div class="glass-card">
-            <h3 style="color:var(--neon-green);margin-bottom:14px;">🔍 Extract from Audio</h3>
+          <!-- Audio Extract Pane -->
+          <div id="pane-aud-extract" class="stego-pane">
+            <h3 style="color:var(--neon-green);margin-bottom:12px;">Extract Payload from Stego WAV Audio</h3>
             <div class="form-group">
               <label>Upload Stego WAV File</label>
               <input type="file" id="aud-extract-file" class="form-control" accept="audio/wav">
             </div>
             <div class="form-group">
-              <label>Password (if encrypted)</label>
-              <input type="password" id="aud-extract-pass" class="form-control">
+              <label>Password <span class="pill" style="font-size:0.65rem;color:var(--cyan);background:rgba(0,242,254,0.1);">OPTIONAL</span></label>
+              <input type="password" id="aud-extract-pass" class="form-control" value="AudioKey77!">
             </div>
             <button class="btn btn-secondary btn-block" onclick="executeAudioExtract()">🔍 Extract Secret from Audio</button>
 
-            <div class="form-group" style="margin-top:14px;">
+            <div class="form-group" style="margin-top:12px;">
               <label>Extracted Secret Message</label>
               <textarea id="aud-extracted-result" class="form-control" rows="4" readonly></textarea>
             </div>
@@ -494,30 +525,27 @@
 
       <!-- ================= 5. POLYGLOT / EOF FILE CARVING ================= -->
       <section id="panel-eof-stego" class="section-panel">
-        <div class="section-header">
-          <h2>📦 Polyglot & EOF File-Carving Steganography</h2>
-          <p>Appends authenticated files past natural End-Of-Image markers (JPEG EOI \xFF\xD9, PNG IEND). Image opens normally in all photo viewers!</p>
-        </div>
+        <div class="unified-stego-card card-3d-tilt">
+          <div class="section-header" style="margin-bottom:16px;">
+            <h2>📦 Polyglot & EOF File-Carving Steganography</h2>
+            <p>Appends authenticated files past natural End-Of-Image markers (JPEG EOI \xFF\xD9, PNG IEND). Image opens normally in all photo viewers!</p>
+          </div>
 
-        <div class="glass-card">
-          <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:16px;">
-            Standard image decoders ignore all bytes past the EOF marker. Opening the image in standard viewers shows the picture normally; opening in StegnoFlow extracts the hidden ZIP, PDF, or confidential documents.
-          </p>
           <div class="grid-2">
             <div>
-              <h4 style="color:var(--cyan);margin-bottom:10px;">Carrier Image File (JPEG/PNG)</h4>
+              <h4 style="color:var(--cyan);margin-bottom:8px;">Carrier Image File (JPEG/PNG)</h4>
               <input type="file" id="eof-carrier" class="form-control" accept="image/png,image/jpeg">
             </div>
             <div>
-              <h4 style="color:var(--magenta);margin-bottom:10px;">Secret File to Hide (ZIP, PDF, EXE)</h4>
+              <h4 style="color:var(--magenta);margin-bottom:8px;">Secret File to Hide (ZIP, PDF, EXE)</h4>
               <input type="file" id="eof-secret" class="form-control">
             </div>
           </div>
-          <div class="form-group" style="margin-top:14px;">
-            <label>Encryption Password</label>
+          <div class="form-group" style="margin-top:12px;">
+            <label>Encryption Password <span class="pill" style="font-size:0.65rem;color:var(--cyan);background:rgba(0,242,254,0.1);">OPTIONAL</span></label>
             <input type="password" id="eof-pass" class="form-control" placeholder="Password protects the polyglot file payload...">
           </div>
-          <button class="btn btn-primary" onclick="alert('Polyglot embedding ready! Ingestion handled via universal API.')">
+          <button class="btn btn-primary btn-block" onclick="alert('Polyglot embedding ready! Ingestion handled via universal API.')">
             📦 Pack Polyglot Carrier
           </button>
         </div>
@@ -525,61 +553,77 @@
 
       <!-- ================= 6. STEGANALYSIS & CHI-SQUARE LAB ================= -->
       <section id="panel-steganalysis" class="section-panel">
-        <div class="section-header">
-          <h2>🔬 Statistical Steganalysis & Chi-Square (χ²) Lab</h2>
-          <p>Westfeld & Pfitzmann Chi-Square Attack, Pairs-of-Values (PoVs) Equalization, Bit-Plane 0 Slicing, and Block Entropy.</p>
-        </div>
-
-        <div class="grid-2">
-          <div class="glass-card">
-            <h3 style="color:var(--cyan);margin-bottom:14px;">🎯 Forensic Target Ingestion</h3>
-            <div class="dropzone" data-preview="steg-target-preview">
-              <input type="file" id="steg-target-file" accept="image/png,image/jpeg">
-              <div class="dropzone-icon">🛰️</div>
-              <div class="dropzone-text">Upload Target Image for Statistical Inspection</div>
-            </div>
-            <div id="steg-target-preview" class="preview-box">
-              <span style="color:var(--text-muted);font-family:var(--font-mono)">[Target Image Preview]</span>
-            </div>
-
-            <div class="dropzone" data-preview="steg-orig-preview" style="margin-top:14px;">
-              <input type="file" id="steg-orig-file" accept="image/png,image/jpeg">
-              <div class="dropzone-icon">📷</div>
-              <div class="dropzone-text">Upload Suspected Original Carrier (Optional for PSNR Delta)</div>
-            </div>
-
-            <button class="btn btn-primary btn-block" style="margin-top:18px;" onclick="executeSteganalysis()">
-              🔬 Run Statistical Steganalysis Attack
-            </button>
-            <div id="steg-status" style="font-family:var(--font-mono);font-size:0.8rem;margin-top:10px;color:var(--amber);"></div>
+        <div class="glass-card card-3d-tilt">
+          <div class="section-header" style="margin-bottom:16px;">
+            <h2>🔬 Statistical Steganalysis & Chi-Square (χ²) Lab</h2>
+            <p>Westfeld & Pfitzmann Chi-Square Attack, Pairs-of-Values (PoVs) Equalization, Bit-Plane 0 Slicing, and Block Entropy.</p>
           </div>
 
-          <div class="glass-card">
-            <h3 style="color:var(--cyan);margin-bottom:14px;">📈 Chi-Square & Forensic Telemetry</h3>
-            <div class="grid-3">
-              <div class="metric-tile">
-                <div class="label">Suspicion Score</div>
-                <div id="steg-score" class="val">-- %</div>
+          <div class="grid-2">
+            <div>
+              <h3 style="color:var(--cyan);margin-bottom:10px;">🎯 Forensic Target Ingestion</h3>
+              <div class="dropzone" data-preview="steg-target-preview">
+                <input type="file" id="steg-target-file" accept="image/png,image/jpeg">
+                <div class="dropzone-icon">🛰️</div>
+                <div class="dropzone-text">Upload Target Image for Statistical Inspection</div>
               </div>
-              <div class="metric-tile">
-                <div class="label">Chi-Square (χ²)</div>
-                <div id="steg-chi" class="val">--</div>
+              <div id="steg-target-preview" class="preview-box" style="min-height:160px;max-height:220px;">
+                <span style="color:var(--text-muted);font-family:var(--font-mono)">[Target Image Preview]</span>
               </div>
-              <div class="metric-tile">
-                <div class="label">Shannon Entropy</div>
-                <div id="steg-entropy" class="val">-- bits</div>
+
+              <div class="dropzone" data-preview="steg-orig-preview" style="margin-top:10px;padding:14px;">
+                <input type="file" id="steg-orig-file" accept="image/png,image/jpeg">
+                <div class="dropzone-text">Upload Suspected Original Carrier (Optional for PSNR Delta)</div>
               </div>
+
+              <button class="btn btn-primary btn-block" style="margin-top:14px;" onclick="executeSteganalysis()">
+                🔬 Run Statistical Steganalysis Attack
+              </button>
+              <div id="steg-status" style="font-family:var(--font-mono);font-size:0.75rem;margin-top:8px;color:var(--amber);"></div>
             </div>
 
-            <div style="height:210px;width:100%;margin-top:18px;">
-              <canvas id="chiChart"></canvas>
-            </div>
+            <div>
+              <h3 style="color:var(--cyan);margin-bottom:10px;">📈 Chi-Square & Forensic Telemetry</h3>
+              <div class="grid-3">
+                <div class="metric-tile">
+                  <div class="label">Suspicion Score</div>
+                  <div id="steg-score" class="val">-- %</div>
+                </div>
+                <div class="metric-tile">
+                  <div class="label">Chi-Square (χ²)</div>
+                  <div id="steg-chi" class="val">--</div>
+                </div>
+                <div class="metric-tile">
+                  <div class="label">Shannon Entropy</div>
+                  <div id="steg-entropy" class="val">-- bits</div>
+                </div>
+              </div>
 
-            <h4 style="color:var(--electric-blue);margin-top:18px;font-size:0.85rem;font-family:var(--font-mono)">
-              BIT PLANE 0 (LSB SLICER) PREVIEW:
-            </h4>
-            <div id="steg-lsb-preview" class="preview-box" style="max-height:160px;min-height:140px;">
-              <span style="color:var(--text-muted);font-family:var(--font-mono)">[LSB Slicer Output]</span>
+              <!-- 3D Steganalysis & Histogram Chart Tabs -->
+              <div class="chart-tabs-bar" style="display:flex;gap:6px;margin-top:14px;margin-bottom:8px;background:rgba(3,6,17,0.9);padding:4px;border-radius:8px;border:1px solid rgba(0,242,254,0.2);">
+                <button class="chart-tab-btn active" id="tab-chart-chi" onclick="switchAnalysisChart('chi')">
+                  📈 Chi-Square Curve
+                </button>
+                <button class="chart-tab-btn" id="tab-chart-rgb" onclick="switchAnalysisChart('rgb')">
+                  📊 RGB Histogram
+                </button>
+                <button class="chart-tab-btn" id="tab-chart-pov" onclick="switchAnalysisChart('pov')">
+                  ⚖️ PoVs Equalization
+                </button>
+              </div>
+
+              <div class="chart-canvas-wrapper" style="height:210px;width:100%;position:relative;">
+                <canvas id="chiChart" style="position:absolute;top:0;left:0;width:100% !important;height:100% !important;"></canvas>
+                <canvas id="rgbHistChart" style="display:none;position:absolute;top:0;left:0;width:100% !important;height:100% !important;"></canvas>
+                <canvas id="povChart" style="display:none;position:absolute;top:0;left:0;width:100% !important;height:100% !important;"></canvas>
+              </div>
+
+              <h4 style="color:var(--electric-blue);margin-top:12px;font-size:0.8rem;font-family:var(--font-mono)">
+                BIT PLANE 0 (LSB SLICER) PREVIEW:
+              </h4>
+              <div id="steg-lsb-preview" class="preview-box" style="max-height:140px;min-height:120px;">
+                <span style="color:var(--text-muted);font-family:var(--font-mono)">[LSB Slicer Output]</span>
+              </div>
             </div>
           </div>
         </div>
@@ -587,31 +631,31 @@
 
       <!-- ================= 7. BATCH SCANNER ================= -->
       <section id="panel-batch-scanner" class="section-panel">
-        <div class="section-header">
-          <h2>🛰️ Automated Batch Multi-Image Steganalysis Scanner</h2>
-          <p>Scan an entire directory of carrier images simultaneously to detect anomalous PoV equalizations and hidden payloads.</p>
-        </div>
+        <div class="glass-card card-3d-tilt">
+          <div class="section-header" style="margin-bottom:16px;">
+            <h2>🛰️ Automated Batch Multi-Image Steganalysis Scanner</h2>
+            <p>Scan an entire directory of carrier images simultaneously to detect anomalous PoV equalizations and hidden payloads.</p>
+          </div>
 
-        <div class="glass-card">
           <div class="dropzone">
             <input type="file" id="batch-files-input" multiple accept="image/png,image/jpeg">
             <div class="dropzone-icon">📁</div>
             <div class="dropzone-text">Select Multiple Images for Simultaneous Batch Steganalysis</div>
           </div>
 
-          <button class="btn btn-primary btn-block" style="margin-top:14px;" onclick="executeBatchScan()">
+          <button class="btn btn-primary btn-block" style="margin-top:12px;" onclick="executeBatchScan()">
             🛰️ Start Automated Batch Intelligence Scan
           </button>
 
-          <div id="batch-results-container" style="margin-top:20px;display:none;">
-            <table style="width:100%;border-collapse:collapse;font-family:var(--font-mono);font-size:0.8rem;">
+          <div id="batch-results-container" style="margin-top:16px;display:none;">
+            <table style="width:100%;border-collapse:collapse;font-family:var(--font-mono);font-size:0.78rem;">
               <thead>
                 <tr style="border-bottom:1px solid var(--border-neon);color:var(--cyan);text-align:left;">
-                  <th style="padding:10px;">Filename</th>
-                  <th style="padding:10px;">Suspicion</th>
-                  <th style="padding:10px;">Risk Level</th>
-                  <th style="padding:10px;">Chi-Square</th>
-                  <th style="padding:10px;">Verdict</th>
+                  <th style="padding:8px;">Filename</th>
+                  <th style="padding:8px;">Suspicion</th>
+                  <th style="padding:8px;">Risk Level</th>
+                  <th style="padding:8px;">Chi-Square</th>
+                  <th style="padding:8px;">Verdict</th>
                 </tr>
               </thead>
               <tbody id="batch-results-tbody">
@@ -623,15 +667,15 @@
 
       <!-- ================= 8. 26+ FORENSIC EFFECTS GALLERY ================= -->
       <section id="panel-effects" class="section-panel">
-        <div class="section-header">
-          <h2>🎨 26+ Forensic & Visual Steganography Effects Studio</h2>
-          <p>Scientific filters: Bit-Plane slicing, 2D FFT, DCT AC energy, Laplacian high-pass, ELA, and thermal false-color.</p>
-        </div>
+        <div class="glass-card card-3d-tilt">
+          <div class="section-header" style="margin-bottom:16px;">
+            <h2>🎨 26+ Forensic & Visual Steganography Effects Studio</h2>
+            <p>Scientific filters: Bit-Plane slicing, 2D FFT, DCT AC energy, Laplacian high-pass, ELA, and thermal false-color.</p>
+          </div>
 
-        <div class="glass-card">
           <div class="grid-2">
             <div>
-              <h4 style="color:var(--cyan);margin-bottom:8px;">1. Ingest Input Image</h4>
+              <h4 style="color:var(--cyan);margin-bottom:6px;">1. Ingest Input Image</h4>
               <div class="dropzone" data-preview="fx-in-preview">
                 <input type="file" id="fx-input-file" accept="image/png,image/jpeg">
                 <div class="dropzone-icon">🖼️</div>
@@ -643,14 +687,14 @@
             </div>
 
             <div>
-              <h4 style="color:var(--magenta);margin-bottom:8px;">2. Real-Time Forensic Render</h4>
-              <div id="fx-out-preview" class="preview-box" style="min-height:300px;">
+              <h4 style="color:var(--magenta);margin-bottom:6px;">2. Real-Time Forensic Render</h4>
+              <div id="fx-out-preview" class="preview-box" style="min-height:280px;">
                 <span style="color:var(--text-muted);font-family:var(--font-mono)">[Select an effect below to render]</span>
               </div>
             </div>
           </div>
 
-          <h3 style="color:#fff;margin-top:28px;font-size:1.05rem;">Available Filters & Forensic Operators (Click Any to Apply):</h3>
+          <h3 style="color:#fff;margin-top:20px;font-size:0.95rem;">Available Filters & Forensic Operators:</h3>
           <div id="effects-container" class="effects-grid">
             <!-- Dynamically populated from API -->
           </div>
@@ -659,19 +703,19 @@
 
       <!-- ================= 9. SPLIT SCREEN COMPARISON SLIDER ================= -->
       <section id="panel-split-compare" class="section-panel">
-        <div class="section-header">
-          <h2>👁️ Split-Screen Forensic Comparison Slider</h2>
-          <p>Drag the interactive divider to inspect micro-deviations between original cover and stego carrier.</p>
-        </div>
+        <div class="glass-card card-3d-tilt">
+          <div class="section-header" style="margin-bottom:16px;">
+            <h2>👁️ Split-Screen Forensic Comparison Slider</h2>
+            <p>Drag the interactive divider to inspect micro-deviations between original cover and stego carrier.</p>
+          </div>
 
-        <div class="glass-card">
-          <div class="grid-2" style="margin-bottom:14px;">
+          <div class="grid-2" style="margin-bottom:12px;">
             <div>
-              <label style="font-size:0.75rem;color:var(--cyan);font-family:var(--font-mono)">BEFORE IMAGE (ORIGINAL):</label>
+              <label style="font-size:0.72rem;color:var(--cyan);font-family:var(--font-mono)">BEFORE IMAGE (ORIGINAL):</label>
               <input type="file" id="split-before-input" class="form-control" accept="image/png,image/jpeg">
             </div>
             <div>
-              <label style="font-size:0.75rem;color:var(--magenta);font-family:var(--font-mono)">AFTER IMAGE (STEGO):</label>
+              <label style="font-size:0.72rem;color:var(--magenta);font-family:var(--font-mono)">AFTER IMAGE (STEGO):</label>
               <input type="file" id="split-after-input" class="form-control" accept="image/png,image/jpeg">
             </div>
           </div>
