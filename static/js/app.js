@@ -1,10 +1,10 @@
 /**
  * StegnoFlow Client Application Controller
  * Handles REST API integrations, Web Audio procedural SFX,
- * Chart.js steganalysis graphs, and UI transitions.
+ * Chart.js steganalysis graphs, Dashboard unified ingestion,
+ * and real-time operational audit logging.
  */
 
-// Web Audio API Synthesizer (Zero external audio asset dependency)
 class CyberAudio {
   constructor() {
     this.ctx = null;
@@ -75,11 +75,24 @@ class CyberAudio {
 const audio = new CyberAudio();
 let chiSquareChart = null;
 
+function logAudit(msg) {
+  const terminal = document.getElementById("audit-log");
+  if (!terminal) return;
+  const timeStr = new Date().toTimeString().split(" ")[0];
+  const div = document.createElement("div");
+  div.className = "log-entry";
+  div.innerHTML = `<span class="log-time">[${timeStr}]</span> ${msg}`;
+  terminal.appendChild(div);
+  terminal.scrollTop = terminal.scrollHeight;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   setupNavigation();
   setupDropzones();
   loadEffectsGallery();
   setupSoundToggle();
+  setupDashboardIngestion();
+  setupSplitSlider();
 });
 
 function setupSoundToggle() {
@@ -92,7 +105,6 @@ function setupSoundToggle() {
   });
 }
 
-// Navigation Tab Switcher
 function setupNavigation() {
   const navItems = document.querySelectorAll(".nav-item");
   const panels = document.querySelectorAll(".section-panel");
@@ -110,12 +122,12 @@ function setupNavigation() {
       const targetPanel = document.getElementById(targetId);
       if (targetPanel) {
         targetPanel.classList.add("active");
+        logAudit(`Navigated to module: [${targetId.replace("panel-", "").toUpperCase()}]`);
       }
     });
   });
 }
 
-// Dropzone file handling & previews
 function setupDropzones() {
   const dropzones = document.querySelectorAll(".dropzone");
 
@@ -141,11 +153,13 @@ function setupDropzones() {
       }
     });
 
-    fileInput.addEventListener("change", () => {
-      if (fileInput.files.length) {
-        handleFileSelect(fileInput.files[0], previewContainer, dz);
-      }
-    });
+    if (fileInput) {
+      fileInput.addEventListener("change", () => {
+        if (fileInput.files.length) {
+          handleFileSelect(fileInput.files[0], previewContainer, dz);
+        }
+      });
+    }
   });
 }
 
@@ -160,6 +174,433 @@ function handleFileSelect(file, previewBox, dropzone) {
       previewBox.innerHTML = `<img src="${e.target.result}" alt="Preview" />`;
     };
     reader.readAsDataURL(file);
+  }
+}
+
+// ================= UNIVERSAL DASHBOARD INGESTION =================
+
+let activeDashboardFile = null;
+
+function setupDashboardIngestion() {
+  const fileInput = document.getElementById("dash-carrier-file");
+  if (!fileInput) return;
+
+  fileInput.addEventListener("change", async () => {
+    if (!fileInput.files.length) return;
+    activeDashboardFile = fileInput.files[0];
+    const previewBox = document.getElementById("dash-carrier-preview");
+
+    document.getElementById("dash-drop-text").textContent = 
+      `${activeDashboardFile.name} (${Math.round(activeDashboardFile.size / 1024)} KB)`;
+
+    logAudit(`Ingested carrier: ${activeDashboardFile.name} [Type: ${activeDashboardFile.type || "binary"}]`);
+
+    if (activeDashboardFile.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewBox.innerHTML = `<img src="${e.target.result}" alt="Preview" />`;
+      };
+      reader.readAsDataURL(activeDashboardFile);
+    } else if (activeDashboardFile.type === "application/pdf") {
+      previewBox.innerHTML = `<div style="color:var(--magenta);font-size:2rem;text-align:center;">📄<br><span style="font-size:0.8rem;color:var(--text-main)">PDF Document Carrier Ready</span></div>`;
+    } else if (activeDashboardFile.type.startsWith("audio/")) {
+      previewBox.innerHTML = `<div style="color:var(--cyan);font-size:2rem;text-align:center;">🎵<br><span style="font-size:0.8rem;color:var(--text-main)">PCM WAV Audio Carrier Ready</span></div>`;
+    } else {
+      previewBox.innerHTML = `<div style="color:var(--amber);font-size:2rem;text-align:center;">📦<br><span style="font-size:0.8rem;color:var(--text-main)">Binary Carrier Ready</span></div>`;
+    }
+
+    // Compute cryptographic multi-hashes
+    const formData = new FormData();
+    formData.append("file", activeDashboardFile);
+    try {
+      const res = await fetch("/api/tools/hash", { method: "POST", body: formData });
+      const hashes = await res.json();
+      document.getElementById("dash-hash-sha256").textContent = `SHA-256: ${hashes.sha256}`;
+      document.getElementById("dash-hash-md5").textContent = `MD5: ${hashes.md5}`;
+      logAudit(`Fingerprint generated: SHA-256=${hashes.sha256.substring(0, 16)}...`);
+    } catch (err) {
+      console.error(err);
+    }
+  });
+}
+
+async function checkPasswordEntropy(pw) {
+  const bar = document.getElementById("entropy-bar");
+  const txt = document.getElementById("entropy-text");
+  const verdict = document.getElementById("entropy-verdict");
+  if (!bar || !txt || !verdict) return;
+
+  if (!pw) {
+    bar.style.width = "0%";
+    txt.textContent = "Entropy: 0 bits";
+    verdict.textContent = "Rating: NONE";
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/tools/password-strength", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: pw })
+    });
+    const data = await res.json();
+    bar.style.width = `${data.score}%`;
+    txt.textContent = `Entropy: ${data.entropy_bits} bits`;
+    verdict.textContent = `Rating: ${data.rating}`;
+
+    if (data.score < 35) {
+      bar.style.background = "var(--crimson)";
+    } else if (data.score < 75) {
+      bar.style.background = "var(--amber)";
+    } else {
+      bar.style.background = "var(--neon-green)";
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function sanitizeUploadedImage() {
+  if (!activeDashboardFile) {
+    alert("Please drop an image carrier into the Ingestion Hub first!");
+    return;
+  }
+  const formData = new FormData();
+  formData.append("image", activeDashboardFile);
+  logAudit("Sanitizing image carrier: Stripping EXIF, GPS, and camera metadata tags...");
+
+  try {
+    const res = await fetch("/api/tools/sanitize-image", { method: "POST", body: formData });
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const dl = document.getElementById("dash-download-btn");
+    dl.href = url;
+    dl.download = `sanitized_${activeDashboardFile.name}`;
+    dl.style.display = "inline-flex";
+    dl.textContent = "⬇️ Download Sanitized Clean Image (No EXIF)";
+    audio.playSuccess();
+    logAudit("EXIF Sanitization Complete: Image scrubbed of all identifying metadata.");
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+async function executeDashboardHide() {
+  if (!activeDashboardFile) {
+    alert("Please upload a carrier file first!");
+    audio.playError();
+    return;
+  }
+  const secretText = document.getElementById("dash-payload-text").value;
+  const pass = document.getElementById("dash-passphrase").value;
+
+  if (!secretText.trim()) {
+    alert("Please enter a secret message to embed!");
+    audio.playError();
+    return;
+  }
+
+  if (window.setCryptoVisualState) window.setCryptoVisualState("processing");
+  logAudit(`Initiating multi-medium steganographic injection into [${activeDashboardFile.name}]...`);
+
+  const formData = new FormData();
+  formData.append("passphrase", pass || "");
+  formData.append("secret_text", secretText);
+
+  try {
+    if (activeDashboardFile.type.startsWith("image/")) {
+      formData.append("carrier", activeDashboardFile);
+      formData.append("bits_per_channel", "1");
+      formData.append("channels", "RGB");
+      formData.append("scatter", "true");
+
+      const res = await fetch("/api/image/hide", { method: "POST", body: formData });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail);
+
+      document.getElementById("dash-result-text").value = 
+        `✅ SUCCESS: Payload encrypted with AES-256-GCM and embedded!\nPSNR Stealth: ${data.metadata.psnr_db} dB | SSIM: ${data.metadata.ssim}\nScattered Bits: ${data.metadata.total_bits_written}`;
+
+      const dl = document.getElementById("dash-download-btn");
+      dl.href = data.image_data_url;
+      dl.download = "stego_carrier.png";
+      dl.style.display = "inline-flex";
+      dl.textContent = "⬇️ Download Stego Protected Carrier";
+    } else if (activeDashboardFile.type === "application/pdf") {
+      formData.append("pdf", activeDashboardFile);
+      const res = await fetch("/api/pdf/hide", { method: "POST", body: formData });
+      if (!res.ok) throw new Error("PDF injection failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+
+      document.getElementById("dash-result-text").value = "✅ SUCCESS: Encrypted payload embedded invisibly into PDF document stream!";
+      const dl = document.getElementById("dash-download-btn");
+      dl.href = url;
+      dl.download = `stego_${activeDashboardFile.name}`;
+      dl.style.display = "inline-flex";
+      dl.textContent = "⬇️ Download Stego Protected PDF";
+    } else if (activeDashboardFile.type.startsWith("audio/")) {
+      formData.append("audio", activeDashboardFile);
+      const res = await fetch("/api/audio/hide", { method: "POST", body: formData });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail);
+
+      document.getElementById("dash-result-text").value = "✅ SUCCESS: Encrypted payload modulated into WAV PCM audio LSB!";
+      const dl = document.getElementById("dash-download-btn");
+      dl.href = data.audio_data_url;
+      dl.download = "stego_audio.wav";
+      dl.style.display = "inline-flex";
+      dl.textContent = "⬇️ Download Stego Protected WAV Audio";
+    }
+
+    audio.playSuccess();
+    if (window.setCryptoVisualState) window.setCryptoVisualState("success");
+    logAudit("Steganographic payload embedding successfully verified.");
+  } catch (err) {
+    audio.playError();
+    if (window.setCryptoVisualState) window.setCryptoVisualState("error");
+    document.getElementById("dash-result-text").value = `❌ Error: ${err.message}`;
+    logAudit(`Error during injection: ${err.message}`);
+  }
+}
+
+async function executeDashboardExtract() {
+  if (!activeDashboardFile) {
+    alert("Please upload a stego carrier to extract from!");
+    audio.playError();
+    return;
+  }
+  const pass = document.getElementById("dash-passphrase").value;
+  if (window.setCryptoVisualState) window.setCryptoVisualState("processing");
+  logAudit(`Scanning carrier [${activeDashboardFile.name}] for embedded signatures...`);
+
+  const formData = new FormData();
+  formData.append("passphrase", pass || "");
+
+  try {
+    let resultText = "";
+    if (activeDashboardFile.type.startsWith("image/")) {
+      formData.append("stego_image", activeDashboardFile);
+      formData.append("bits_per_channel", "1");
+      formData.append("channels", "RGB");
+      formData.append("scatter", "true");
+
+      const res = await fetch("/api/image/extract", { method: "POST", body: formData });
+      const data = await res.json();
+      if (data.success) {
+        resultText = `🔓 EXTRACTED CONFIDENTIAL CONTENT:\n${data.text_content || "[Binary Payload]"}\n\n[Status: ${data.message}]`;
+        audio.playSuccess();
+        if (window.setCryptoVisualState) window.setCryptoVisualState("success");
+      } else {
+        resultText = `❌ Extraction Failed: ${data.message}`;
+        audio.playError();
+        if (window.setCryptoVisualState) window.setCryptoVisualState("error");
+      }
+    } else if (activeDashboardFile.type === "application/pdf") {
+      formData.append("pdf", activeDashboardFile);
+      const res = await fetch("/api/pdf/extract", { method: "POST", body: formData });
+      const data = await res.json();
+      if (data.success) {
+        resultText = `🔓 EXTRACTED FROM PDF:\n${data.text_content}`;
+        audio.playSuccess();
+        if (window.setCryptoVisualState) window.setCryptoVisualState("success");
+      } else {
+        resultText = `❌ PDF Extraction Failed: ${data.message}`;
+        audio.playError();
+        if (window.setCryptoVisualState) window.setCryptoVisualState("error");
+      }
+    } else if (activeDashboardFile.type.startsWith("audio/")) {
+      formData.append("audio", activeDashboardFile);
+      const res = await fetch("/api/audio/extract", { method: "POST", body: formData });
+      const data = await res.json();
+      if (data.success) {
+        resultText = `🔓 EXTRACTED FROM AUDIO:\n${data.text_content}`;
+        audio.playSuccess();
+        if (window.setCryptoVisualState) window.setCryptoVisualState("success");
+      } else {
+        resultText = `❌ Audio Extraction Failed: ${data.message}`;
+        audio.playError();
+        if (window.setCryptoVisualState) window.setCryptoVisualState("error");
+      }
+    }
+
+    document.getElementById("dash-result-text").value = resultText;
+    logAudit(resultText.split("\n")[0]);
+  } catch (err) {
+    audio.playError();
+    document.getElementById("dash-result-text").value = `❌ Error: ${err.message}`;
+  }
+}
+
+// ================= PDF STEGANOGRAPHY =================
+
+async function executePdfHide() {
+  const file = document.getElementById("pdf-carrier-file").files[0];
+  const text = document.getElementById("pdf-hide-text").value;
+  const pass = document.getElementById("pdf-hide-pass").value;
+
+  if (!file || !text.trim()) {
+    alert("Please provide carrier PDF and secret payload!");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("pdf", file);
+  formData.append("secret_text", text);
+  if (pass) formData.append("passphrase", pass);
+
+  try {
+    const res = await fetch("/api/pdf/hide", { method: "POST", body: formData });
+    if (!res.ok) throw new Error("PDF hide failed");
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `stego_${file.name}`;
+    a.click();
+    audio.playSuccess();
+    logAudit(`PDF payload injected into ${file.name}`);
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+async function executePdfExtract() {
+  const file = document.getElementById("pdf-extract-file").files[0];
+  const pass = document.getElementById("pdf-extract-pass").value;
+
+  if (!file) {
+    alert("Please select a PDF file!");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("pdf", file);
+  if (pass) formData.append("passphrase", pass);
+
+  try {
+    const res = await fetch("/api/pdf/extract", { method: "POST", body: formData });
+    const data = await res.json();
+    const out = document.getElementById("pdf-extract-result");
+    if (data.success) {
+      out.value = data.text_content;
+      audio.playSuccess();
+      logAudit("Extracted payload from PDF carrier.");
+    } else {
+      out.value = `❌ ${data.message}`;
+      audio.playError();
+    }
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+// ================= SYNTHETIC AUDIO CARRIER =================
+
+async function generateSynthAudio(toneType) {
+  logAudit(`Synthesizing clean 16-bit PCM WAV carrier: [${toneType}]...`);
+  const formData = new FormData();
+  formData.append("duration", "3.0");
+  formData.append("tone_type", toneType);
+
+  try {
+    const res = await fetch("/api/audio/synthesize", { method: "POST", body: formData });
+    const blob = await res.blob();
+    const file = new File([blob], `synth_${toneType}.wav`, { type: "audio/wav" });
+
+    // Set into audio carrier input
+    const container = new DataTransfer();
+    container.items.add(file);
+    document.getElementById("aud-carrier").files = container.files;
+
+    audio.playSuccess();
+    logAudit(`Generated synthetic WAV carrier: synth_${toneType}.wav`);
+    alert(`Synthetic carrier 'synth_${toneType}.wav' created and loaded into Audio Studio!`);
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+// ================= BATCH STEGO SCANNER =================
+
+async function executeBatchScan() {
+  const input = document.getElementById("batch-files-input");
+  if (!input.files.length) {
+    alert("Please select multiple images for batch analysis!");
+    return;
+  }
+
+  logAudit(`Launching batch scan across ${input.files.length} images...`);
+  const formData = new FormData();
+  for (let i = 0; i < input.files.length; i++) {
+    formData.append("files", input.files[i]);
+  }
+
+  try {
+    const res = await fetch("/api/analyze/batch", { method: "POST", body: formData });
+    const data = await res.json();
+    const tbody = document.getElementById("batch-results-tbody");
+    tbody.innerHTML = "";
+
+    data.results.forEach(r => {
+      const tr = document.createElement("tr");
+      tr.style.borderBottom = "1px solid rgba(255,255,255,0.06)";
+      const isSus = r.suspicion_score > 50;
+      tr.innerHTML = `
+        <td style="padding:10px;color:#fff;">${r.filename}</td>
+        <td style="padding:10px;color:${isSus ? "var(--crimson)" : "var(--neon-green)"};">${r.suspicion_score}%</td>
+        <td style="padding:10px;">${r.risk_level}</td>
+        <td style="padding:10px;">${r.chi_square_stat}</td>
+        <td style="padding:10px;color:var(--text-muted);">${r.verdict}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    document.getElementById("batch-results-container").style.display = "block";
+    audio.playSuccess();
+    logAudit(`Batch analysis complete: Scanned ${data.total_scanned} files.`);
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+// ================= SPLIT SCREEN SLIDER =================
+
+function setupSplitSlider() {
+  const beforeIn = document.getElementById("split-before-input");
+  const afterIn = document.getElementById("split-after-input");
+  const imgBefore = document.getElementById("split-img-before");
+  const imgAfter = document.getElementById("split-img-after");
+
+  if (!beforeIn || !afterIn) return;
+
+  beforeIn.addEventListener("change", () => {
+    if (beforeIn.files.length) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        imgBefore.src = e.target.result;
+        imgBefore.style.display = "block";
+      };
+      reader.readAsDataURL(beforeIn.files[0]);
+    }
+  });
+
+  afterIn.addEventListener("change", () => {
+    if (afterIn.files.length) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        imgAfter.src = e.target.result;
+        imgAfter.style.display = "block";
+      };
+      reader.readAsDataURL(afterIn.files[0]);
+    }
+  });
+}
+
+function updateSplitSlider(val) {
+  const wrapper = document.getElementById("split-img-after-wrapper");
+  if (wrapper) {
+    wrapper.style.width = `${val}%`;
   }
 }
 
@@ -197,32 +638,26 @@ async function executeImageHide() {
   if (window.setCryptoVisualState) window.setCryptoVisualState("processing");
 
   try {
-    const res = await fetch("/api/image/hide", {
-      method: "POST",
-      body: formData
-    });
+    const res = await fetch("/api/image/hide", { method: "POST", body: formData });
     const data = await res.json();
-
     if (!res.ok) throw new Error(data.detail || "Encoding failed.");
 
     statusText.textContent = "✅ Stego Image Ready (Zero Visual Degradation)";
     audio.playSuccess();
     if (window.setCryptoVisualState) window.setCryptoVisualState("success");
 
-    // Display output image
     const outBox = document.getElementById("img-hide-out-preview");
     outBox.innerHTML = `<img src="${data.image_data_url}" alt="Stego Output" />`;
 
-    // Setup download button
     const dlBtn = document.getElementById("img-hide-download");
     dlBtn.href = data.image_data_url;
-    dlBtn.download = "steganoflow_encoded.png";
+    dlBtn.download = "stegoflow_encoded.png";
     dlBtn.style.display = "inline-flex";
 
-    // Update metrics
     document.getElementById("metric-psnr").textContent = `${data.metadata.psnr_db} dB`;
     document.getElementById("metric-ssim").textContent = data.metadata.ssim;
     document.getElementById("metric-rate").textContent = `${data.metadata.embedding_rate_percent}%`;
+    logAudit(`Image stego generated with PSNR ${data.metadata.psnr_db} dB.`);
   } catch (err) {
     statusText.textContent = `❌ ${err.message}`;
     audio.playError();
@@ -255,16 +690,14 @@ async function executeImageExtract() {
   if (window.setCryptoVisualState) window.setCryptoVisualState("processing");
 
   try {
-    const res = await fetch("/api/image/extract", {
-      method: "POST",
-      body: formData
-    });
+    const res = await fetch("/api/image/extract", { method: "POST", body: formData });
     const data = await res.json();
 
     if (data.success) {
       audio.playSuccess();
       if (window.setCryptoVisualState) window.setCryptoVisualState("success");
       outArea.value = data.text_content || `[Extracted Binary Payload (${data.byte_length} bytes)]`;
+      logAudit("Image payload extracted and AEAD signature verified.");
     } else {
       audio.playError();
       if (window.setCryptoVisualState) window.setCryptoVisualState("error");
@@ -290,7 +723,7 @@ async function executeSteganalysis() {
 
   const formData = new FormData();
   formData.append("file", fileInput.files[0]);
-  if (origInput.files.length) {
+  if (origInput && origInput.files.length) {
     formData.append("original", origInput.files[0]);
   }
 
@@ -299,29 +732,24 @@ async function executeSteganalysis() {
   if (window.setCryptoVisualState) window.setCryptoVisualState("processing");
 
   try {
-    const res = await fetch("/api/analyze/steganalysis", {
-      method: "POST",
-      body: formData
-    });
+    const res = await fetch("/api/analyze/steganalysis", { method: "POST", body: formData });
     const report = await res.json();
 
     statusText.textContent = `Verdict: ${report.verdict}`;
     audio.playSuccess();
     if (window.setCryptoVisualState) window.setCryptoVisualState("success");
 
-    // Metrics
     document.getElementById("steg-score").textContent = `${report.suspicion_score}%`;
     document.getElementById("steg-chi").textContent = report.chi_square.chi_square_stat;
     document.getElementById("steg-entropy").textContent = report.global_entropy;
 
-    // Bit Plane 0 Display
     if (report.lsb_plane_data_url) {
       const lsbBox = document.getElementById("steg-lsb-preview");
       lsbBox.innerHTML = `<img src="${report.lsb_plane_data_url}" alt="LSB Plane 0" />`;
     }
 
-    // Render Chi-Square Chart using Chart.js
     renderChiChart(report.chi_square.curve_points);
+    logAudit(`Steganalysis completed: Suspicion ${report.suspicion_score}%.`);
   } catch (err) {
     statusText.textContent = `❌ ${err.message}`;
     audio.playError();
@@ -377,7 +805,7 @@ function renderChiChart(points) {
   });
 }
 
-// ================= 25+ FORENSIC EFFECTS GALLERY =================
+// ================= 26+ FORENSIC EFFECTS GALLERY =================
 
 let allEffects = [];
 
@@ -428,14 +856,12 @@ async function applySelectedEffect(effectId) {
   outBox.innerHTML = "<p style='color:#00f2fe;font-family:monospace'>Applying mathematical filter...</p>";
 
   try {
-    const res = await fetch("/api/effects/apply", {
-      method: "POST",
-      body: formData
-    });
+    const res = await fetch("/api/effects/apply", { method: "POST", body: formData });
     const blob = await res.blob();
     const url = URL.createObjectURL(blob);
     outBox.innerHTML = `<img src="${url}" alt="Processed Effect" />`;
     audio.playSuccess();
+    logAudit(`Applied forensic filter: ${effectId}`);
   } catch (err) {
     outBox.innerHTML = `<p style='color:#ff0055'>Error: ${err.message}</p>`;
     audio.playError();
@@ -468,6 +894,7 @@ async function executeTextHide() {
     if (data.success) {
       document.getElementById("txt-stego-out").value = data.stego_text;
       audio.playSuccess();
+      logAudit("Zero-width stego injected into cover text.");
     }
   } catch (err) {
     alert(err.message);
@@ -497,6 +924,7 @@ async function executeTextExtract() {
     if (data.success) {
       out.value = data.secret_message;
       audio.playSuccess();
+      logAudit("Zero-width text payload extracted.");
     } else {
       out.value = `❌ ${data.message}`;
       audio.playError();
@@ -528,10 +956,7 @@ async function executeAudioHide() {
   if (pass) formData.append("passphrase", pass);
 
   try {
-    const res = await fetch("/api/audio/hide", {
-      method: "POST",
-      body: formData
-    });
+    const res = await fetch("/api/audio/hide", { method: "POST", body: formData });
     const data = await res.json();
     if (data.success) {
       const player = document.getElementById("aud-stego-player");
@@ -542,6 +967,7 @@ async function executeAudioHide() {
       dl.download = "stego_audio.wav";
       dl.style.display = "inline-flex";
       audio.playSuccess();
+      logAudit("Audio WAV stego payload embedded.");
     } else {
       alert(data.detail || "Audio encoding failed.");
     }
@@ -564,15 +990,13 @@ async function executeAudioExtract() {
   if (pass) formData.append("passphrase", pass);
 
   try {
-    const res = await fetch("/api/audio/extract", {
-      method: "POST",
-      body: formData
-    });
+    const res = await fetch("/api/audio/extract", { method: "POST", body: formData });
     const data = await res.json();
     const out = document.getElementById("aud-extracted-result");
     if (data.success) {
       out.value = data.text_content;
       audio.playSuccess();
+      logAudit("Payload extracted from audio carrier.");
     } else {
       out.value = `❌ ${data.message}`;
       audio.playError();

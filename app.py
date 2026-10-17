@@ -39,11 +39,20 @@ from core.file_stego import (
     inject_eof_payload,
     extract_eof_payload
 )
+from core.utils import (
+    compute_multi_hashes,
+    calculate_password_strength,
+    generate_synthetic_audio_carrier,
+    strip_image_metadata,
+    hide_in_pdf,
+    extract_from_pdf,
+    batch_scan_images
+)
 
 app = FastAPI(
-    title="StegnoFlow - Advanced Steganography & Forensic Analysis",
-    description="Dual steganography tool: multi-medium carrier encoder + statistical hidden-message detector.",
-    version="2.0.0"
+    title="StegnoFlow - Enterprise Cyber Intelligence Steganography Platform",
+    description="Full-spectrum multi-medium carrier encoder, statistical forensic detector, and intelligence analysis suite.",
+    version="2.5.0"
 )
 
 # Enable CORS for cross-origin or API testing
@@ -380,6 +389,113 @@ async def api_eof_extract(
         "message": msg,
         "base64_data": base64.b64encode(file_bytes).decode("utf-8")
     }
+
+# ----------------- ADVANCED FORENSIC TOOLS & EXTENSIONS -----------------
+
+@app.post("/api/pdf/hide")
+async def api_pdf_hide(
+    pdf: UploadFile = File(...),
+    secret_text: Optional[str] = Form(None),
+    secret_file: Optional[UploadFile] = File(None),
+    passphrase: Optional[str] = Form(None)
+):
+    """Injects encrypted payload into PDF document."""
+    pdf_bytes = await pdf.read()
+    if secret_file and secret_file.filename:
+        payload_bytes = await secret_file.read()
+    elif secret_text:
+        payload_bytes = secret_text.encode("utf-8")
+    else:
+        raise HTTPException(status_code=400, detail="No secret payload provided.")
+
+    stego_pdf, meta = hide_in_pdf(pdf_bytes, payload_bytes, passphrase)
+    buf = io.BytesIO(stego_pdf)
+    return StreamingResponse(
+        buf,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename=stego_{pdf.filename}"}
+    )
+
+@app.post("/api/pdf/extract")
+async def api_pdf_extract(
+    pdf: UploadFile = File(...),
+    passphrase: Optional[str] = Form(None)
+):
+    """Extracts encrypted payload from PDF document."""
+    pdf_bytes = await pdf.read()
+    success, payload_bytes, msg = extract_from_pdf(pdf_bytes, passphrase)
+    if not success:
+        return {"success": False, "message": msg}
+
+    try:
+        text_content = payload_bytes.decode("utf-8")
+        is_text = True
+    except UnicodeDecodeError:
+        text_content = ""
+        is_text = False
+
+    return {
+        "success": True,
+        "message": msg,
+        "is_text": is_text,
+        "text_content": text_content,
+        "byte_length": len(payload_bytes),
+        "base64_data": base64.b64encode(payload_bytes).decode("utf-8")
+    }
+
+@app.post("/api/audio/synthesize")
+async def api_audio_synthesize(
+    duration: float = Form(3.0),
+    tone_type: str = Form("ambient")
+):
+    """Generates synthetic WAV audio carrier for instant steganography."""
+    wav_bytes = generate_synthetic_audio_carrier(duration_sec=duration, tone_type=tone_type)
+    buf = io.BytesIO(wav_bytes)
+    return StreamingResponse(
+        buf,
+        media_type="audio/wav",
+        headers={"Content-Disposition": f"attachment; filename=synth_{tone_type}.wav"}
+    )
+
+@app.post("/api/tools/hash")
+async def api_tools_hash(file: UploadFile = File(...)):
+    """Computes cryptographic hashes (MD5, SHA1, SHA256, SHA512) for file integrity."""
+    content = await file.read()
+    return compute_multi_hashes(content)
+
+@app.post("/api/tools/password-strength")
+async def api_password_strength(payload: dict):
+    """Computes cryptographic password entropy bits and rating."""
+    pw = payload.get("password", "")
+    return calculate_password_strength(pw)
+
+@app.post("/api/tools/sanitize-image")
+async def api_sanitize_image(image: UploadFile = File(...)):
+    """Strips all EXIF, GPS, and camera metadata from image."""
+    content = await image.read()
+    img = Image.open(io.BytesIO(content))
+    clean_img, stripped_count = strip_image_metadata(img)
+    
+    buf = io.BytesIO()
+    clean_img.save(buf, format="PNG")
+    buf.seek(0)
+    
+    return StreamingResponse(
+        buf,
+        media_type="image/png",
+        headers={"X-Metadata-Keys-Stripped": str(stripped_count), "Content-Disposition": f"attachment; filename=clean_{image.filename}"}
+    )
+
+@app.post("/api/analyze/batch")
+async def api_analyze_batch(files: list[UploadFile] = File(...)):
+    """Scans multiple images for steganographic anomalies in batch."""
+    images = []
+    for f in files:
+        b = await f.read()
+        images.append((f.filename, b))
+    
+    results = batch_scan_images(images)
+    return {"total_scanned": len(results), "results": results}
 
 if __name__ == "__main__":
     import uvicorn

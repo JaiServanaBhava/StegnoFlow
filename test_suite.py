@@ -111,7 +111,7 @@ def run_all_tests():
     print("  -> Audio WAV PCM LSB: PASSED")
 
     # 7. Test Polyglot / EOF File-Carving
-    print("[7/7] Testing Polyglot & EOF File-Carving...")
+    print("[7/10] Testing Polyglot & EOF File-Carving...")
     dummy_img = b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR...\x49\x45\x4E\x44\xAE\x42\x60\x82"
     dummy_payload = b"Top secret ZIP content"
     poly_out, p_meta = inject_eof_payload(dummy_img, dummy_payload, "secret.zip", "PolyKey")
@@ -119,9 +119,36 @@ def run_all_tests():
     assert ok_p and p_name == "secret.zip" and p_extr == dummy_payload
     print("  -> Polyglot File-Carving: PASSED")
 
+    # 8. Test PDF Document Steganography
+    print("[8/10] Testing PDF Document Steganography...")
+    from core.utils import hide_in_pdf, extract_from_pdf, generate_synthetic_audio_carrier, compute_multi_hashes, calculate_password_strength, strip_image_metadata
+    dummy_pdf = b"%PDF-1.4\n1 0 obj\n<< /Type /Catalog >>\nendobj\n%%EOF"
+    pdf_secret = b"Confidential Executive Briefing"
+    stego_pdf, pdf_meta = hide_in_pdf(dummy_pdf, pdf_secret, passphrase="PdfKey")
+    ok_pdf, pdf_recovered, pdf_msg = extract_from_pdf(stego_pdf, passphrase="PdfKey")
+    assert ok_pdf and pdf_recovered == pdf_secret, f"PDF extraction failed: {pdf_msg}"
+    print("  -> PDF Document Steganography: PASSED")
+
+    # 9. Test Synthetic Audio Tone Generation & EXIF Sanitization
+    print("[9/10] Testing Synthetic Audio Tone Generator & Metadata Sanitizer...")
+    synth_wav = generate_synthetic_audio_carrier(duration_sec=0.5, tone_type="ambient")
+    assert len(synth_wav) > 1000
+    clean_img, stripped = strip_image_metadata(img)
+    assert clean_img.size == img.size
+    print("  -> Synthetic Carrier & Metadata Sanitizer: PASSED")
+
+    # 10. Test Multi-Hash Fingerprinter & Entropy Calculator
+    print("[10/10] Testing Cryptographic Hash Engine & Password Entropy...")
+    hashes = compute_multi_hashes(b"TestStegnoFlowPayload")
+    assert "sha256" in hashes and "md5" in hashes and len(hashes["sha256"]) == 64
+    pw_res = calculate_password_strength("MySuperP@ssw0rd!2026")
+    assert pw_res["score"] >= 80
+    print("  -> Multi-Hash Fingerprinter & Entropy Engine: PASSED")
+
     print("==================================================")
-    print("🎉 ALL 7/7 STEGNOFLOW MODULES VERIFIED & OPERATIONAL!")
+    print("🎉 ALL 10/10 STEGNOFLOW CORE MODULES VERIFIED & OPERATIONAL!")
     print("==================================================")
 
 if __name__ == "__main__":
     run_all_tests()
+

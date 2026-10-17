@@ -3,32 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StegnoFlow | Dual Steganography & Forensic Analysis Suite</title>
+  <title>StegnoFlow | Enterprise Cyber Intelligence & Steganography Platform</title>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
   <!-- Stylesheet -->
   <link rel="stylesheet" href="/static/css/style.css">
-  <!-- Three.js & Chart.js -->
+  <!-- Three.js & Chart.js CDNs -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-  <!-- Top Navbar -->
+  <!-- Top 3D Animated Navbar -->
   <nav class="navbar">
     <div class="brand">
-      <div class="brand-logo">🛡️</div>
+      <div class="brand-logo-3d">
+        <div class="logo-face">🛡️</div>
+      </div>
       <div class="brand-text">
-        <h1>STEGNOFLOW // V2.0</h1>
-        <span>CYBERSECURITY LABS — JNTUK R23 PROJECT 20</span>
+        <h1>STEGNOFLOW // V2.5</h1>
+        <span>CYBER INTELLIGENCE & FORENSIC STEGANALYSIS</span>
       </div>
     </div>
     <div class="nav-badges">
-      <div class="badge pulse">CORE ENGINE ACTIVE</div>
+      <div class="badge pulse">CORE RUNTIME ACTIVE</div>
       <div class="badge">AES-256-GCM AEAD</div>
       <div class="badge">PRNG SCATTER: ONLINE</div>
+      <div class="badge">HMAC-SHA256 SENTINEL</div>
       <button id="sound-toggle" class="sound-toggle-btn">🔊 AUDIO: ON</button>
     </div>
   </nav>
@@ -36,26 +39,40 @@
   <div class="app-container">
     <!-- Sidebar Navigation -->
     <aside class="sidebar">
-      <a href="#" class="nav-item active" data-target="panel-image-stego">
+      <div class="nav-category">EXECUTIVE COMMAND</div>
+      <a href="#" class="nav-item active" data-target="panel-dashboard">
+        <span class="icon">⚡</span> Unified Dashboard
+      </a>
+
+      <div class="nav-category">MULTI-MEDIUM ENCODING</div>
+      <a href="#" class="nav-item" data-target="panel-image-stego">
         <span class="icon">🖼️</span> Image Steganography
       </a>
-      <a href="#" class="nav-item" data-target="panel-steganalysis">
-        <span class="icon">🔬</span> Steganalysis Lab (Chi-Square)
-      </a>
-      <a href="#" class="nav-item" data-target="panel-effects">
-        <span class="icon">🎨</span> 25+ Forensic Effects
+      <a href="#" class="nav-item" data-target="panel-pdf-stego">
+        <span class="icon">📄</span> PDF Document Stego
       </a>
       <a href="#" class="nav-item" data-target="panel-text-stego">
-        <span class="icon">📝</span> Zero-Width Invisible Text
+        <span class="icon">📝</span> Invisible Zero-Width Text
       </a>
       <a href="#" class="nav-item" data-target="panel-audio-stego">
         <span class="icon">🎵</span> Audio WAV Steganography
       </a>
       <a href="#" class="nav-item" data-target="panel-eof-stego">
-        <span class="icon">📦</span> Polyglot / EOF File Carving
+        <span class="icon">📦</span> Polyglot / File Carving
       </a>
-      <a href="#" class="nav-item" data-target="panel-viva-guide">
-        <span class="icon">🎓</span> JNTUK Project 20 Guide
+
+      <div class="nav-category">FORENSIC STEGANALYSIS</div>
+      <a href="#" class="nav-item" data-target="panel-steganalysis">
+        <span class="icon">🔬</span> Chi-Square (χ²) Lab
+      </a>
+      <a href="#" class="nav-item" data-target="panel-batch-scanner">
+        <span class="icon">🛰️</span> Batch Stego Scanner
+      </a>
+      <a href="#" class="nav-item" data-target="panel-effects">
+        <span class="icon">🎨</span> 26+ Forensic Effects
+      </a>
+      <a href="#" class="nav-item" data-target="panel-split-compare">
+        <span class="icon">👁️</span> Split Comparison Slider
       </a>
 
       <!-- 3D Holographic Viewport Widget -->
@@ -68,22 +85,134 @@
     <!-- Main Workspace Area -->
     <main class="main-content">
 
-      <!-- ================= 1. IMAGE STEGANOGRAPHY ================= -->
-      <section id="panel-image-stego" class="section-panel active">
+      <!-- ================= 0. UNIFIED DASHBOARD ================= -->
+      <section id="panel-dashboard" class="section-panel active">
         <div class="section-header">
-          <h2>🖼️ Dual Image Steganography Engine</h2>
-          <p>LSB carrier embedding with AES-256-GCM encryption, spatial PRNG permutation scattering, and capacity telemetry.</p>
+          <h2>⚡ Unified Command Center & Rapid Ingestion Hub</h2>
+          <p>Drop any medium (Image, Audio WAV, PDF, Text, or Binary payload) for instant analysis, auto-detection, and military encryption.</p>
+        </div>
+
+        <!-- Telemetry Summary -->
+        <div class="grid-4" style="margin-bottom:24px;">
+          <div class="metric-tile">
+            <div class="label">System Integrity</div>
+            <div class="val" style="color:var(--neon-green)">100% SECURE</div>
+          </div>
+          <div class="metric-tile">
+            <div class="label">Active Cipher</div>
+            <div class="val">AES-256-GCM</div>
+          </div>
+          <div class="metric-tile">
+            <div class="label">PBKDF2 Rounds</div>
+            <div class="val">200,000</div>
+          </div>
+          <div class="metric-tile">
+            <div class="label">Detection Engine</div>
+            <div class="val" style="color:var(--cyan)">χ² Chi-Square</div>
+          </div>
         </div>
 
         <div class="grid-2">
-          <!-- Encoder Card -->
+          <!-- Universal Drag and Drop Hub -->
+          <div class="glass-card">
+            <h3 style="color:var(--cyan);margin-bottom:12px;font-size:1.1rem;">📥 Universal Carrier Ingestion Hub</h3>
+            <p style="color:var(--text-muted);font-size:0.8rem;margin-bottom:14px;">
+              Supports PNG, JPG, WAV Audio, PDF documents, and Raw Binary files.
+            </p>
+
+            <div class="dropzone" id="dash-dropzone" data-preview="dash-carrier-preview">
+              <input type="file" id="dash-carrier-file">
+              <div class="dropzone-icon">🚀</div>
+              <div class="dropzone-text" id="dash-drop-text">Drag & Drop Any Carrier File (Image / Audio / PDF)</div>
+              <div class="dropzone-sub">Automatic MIME detection & integrity fingerprinting</div>
+            </div>
+
+            <!-- Carrier Preview Box -->
+            <div id="dash-carrier-preview" class="preview-box" style="min-height:160px;max-height:220px;">
+              <span style="color:var(--text-muted);font-size:0.8rem;font-family:var(--font-mono)">[Carrier Ingestion Preview]</span>
+            </div>
+
+            <!-- Hash Fingerprint Card -->
+            <div style="background:rgba(6,9,17,0.7);padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);margin-top:14px;font-family:var(--font-mono);font-size:0.75rem;">
+              <div style="color:var(--cyan);margin-bottom:4px;">CRYPTOGRAPHIC FINGERPRINT:</div>
+              <div id="dash-hash-sha256" style="color:var(--text-main);word-break:break-all;">SHA-256: Waiting for file ingestion...</div>
+              <div id="dash-hash-md5" style="color:var(--text-muted);margin-top:2px;">MD5: --</div>
+            </div>
+
+            <!-- EXIF Sanitizer Button -->
+            <button class="btn btn-secondary btn-block" style="margin-top:12px;" onclick="sanitizeUploadedImage()">
+              🧹 Strip EXIF & Geolocation Metadata
+            </button>
+          </div>
+
+          <!-- Rapid Payload Configurator -->
+          <div class="glass-card">
+            <h3 style="color:var(--magenta);margin-bottom:12px;font-size:1.1rem;">🔐 Secret Payload & Defense Configuration</h3>
+
+            <div class="form-group">
+              <label>Confidential Secret Payload (Text or Binary Data)</label>
+              <textarea id="dash-payload-text" class="form-control" rows="3" placeholder="Enter secret message, intelligence coordinates, or credentials to embed..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Military AES-256-GCM Passphrase</label>
+              <input type="password" id="dash-passphrase" class="form-control" placeholder="Enter high-entropy encryption key..." oninput="checkPasswordEntropy(this.value)">
+              <div class="entropy-bar-track">
+                <div id="entropy-bar" class="entropy-bar-fill"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:0.7rem;font-family:var(--font-mono);">
+                <span id="entropy-text" style="color:var(--text-muted);">Entropy: 0 bits</span>
+                <span id="entropy-verdict" style="color:var(--text-muted);">Rating: NONE</span>
+              </div>
+            </div>
+
+            <div class="grid-2" style="gap:12px;">
+              <button class="btn btn-primary btn-block" onclick="executeDashboardHide()">
+                🚀 1-Click Encrypt & Hide
+              </button>
+              <button class="btn btn-secondary btn-block" onclick="executeDashboardExtract()">
+                🔍 1-Click Extract & Decrypt
+              </button>
+            </div>
+
+            <div class="form-group" style="margin-top:16px;">
+              <label>Decrypted Output / Telemetry Log</label>
+              <textarea id="dash-result-text" class="form-control" rows="3" readonly placeholder="Decrypted payload or operational telemetry will appear here..."></textarea>
+            </div>
+
+            <a id="dash-download-btn" class="btn btn-magenta btn-block" style="display:none;margin-top:10px;">
+              ⬇️ Download Protected Stego Output
+            </a>
+          </div>
+        </div>
+
+        <!-- Live Operational Terminal Log Console -->
+        <div class="glass-card" style="margin-top:10px;">
+          <h4 style="color:var(--neon-green);margin-bottom:8px;font-size:0.85rem;font-family:var(--font-mono);">
+            // LIVE CRYPTOGRAPHIC AUDIT CONSOLE
+          </h4>
+          <div id="audit-log" class="audit-terminal">
+            <div class="log-entry"><span class="log-time">[00:00:01]</span> System initialized. Cryptographic hardware primitives loaded.</div>
+            <div class="log-entry"><span class="log-time">[00:00:02]</span> AES-256-GCM authenticated cipher engine bound with PBKDF2 (200k rounds).</div>
+            <div class="log-entry"><span class="log-time">[00:00:03]</span> Westfeld & Pfitzmann Chi-Square detection models primed for inspection.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 1. IMAGE STEGANOGRAPHY ================= -->
+      <section id="panel-image-stego" class="section-panel">
+        <div class="section-header">
+          <h2>🖼️ Image Steganography Studio (LSB + PRNG Scattering)</h2>
+          <p>Carrier embedding with multi-channel selection, 1-4 bit depth modulation, and spatial PRNG keystream permutation.</p>
+        </div>
+
+        <div class="grid-2">
           <div class="glass-card">
             <h3 style="color:var(--cyan);margin-bottom:14px;font-size:1.05rem;">🔒 Hide Secret Message / File</h3>
             <div class="dropzone" data-preview="img-hide-preview">
               <input type="file" id="img-hide-carrier" accept="image/png,image/jpeg">
               <div class="dropzone-icon">📁</div>
               <div class="dropzone-text">Click or Drop Carrier Image Here (PNG/JPG)</div>
-              <div class="dropzone-sub">Uncompressed PNG recommended for lossless LSB storage</div>
             </div>
             <div id="img-hide-preview" class="preview-box">
               <span style="color:var(--text-muted);font-size:0.8rem;font-family:var(--font-mono)">[Carrier Image Preview]</span>
@@ -91,12 +220,12 @@
 
             <div class="form-group" style="margin-top:14px;">
               <label>Confidential Payload Text</label>
-              <textarea id="img-hide-text" class="form-control" placeholder="Type confidential intelligence message to embed..."></textarea>
+              <textarea id="img-hide-text" class="form-control" placeholder="Type confidential message to embed..."></textarea>
             </div>
 
             <div class="form-group">
-              <label>Military AES-256-GCM Passphrase (Optional)</label>
-              <input type="password" id="img-hide-pass" class="form-control" placeholder="High-entropy encryption key...">
+              <label>AES-256-GCM Passphrase (Optional)</label>
+              <input type="password" id="img-hide-pass" class="form-control" placeholder="Encryption key...">
             </div>
 
             <div class="grid-2" style="gap:12px;">
@@ -131,10 +260,8 @@
             <div id="img-hide-status" style="font-family:var(--font-mono);font-size:0.78rem;margin-top:10px;color:var(--cyan);"></div>
           </div>
 
-          <!-- Stego Output & Decoder Card -->
           <div class="glass-card">
             <h3 style="color:var(--magenta);margin-bottom:14px;font-size:1.05rem;">📊 Visual Degradation Telemetry</h3>
-            
             <div class="grid-3">
               <div class="metric-tile">
                 <div class="label">PSNR Stealth</div>
@@ -207,106 +334,56 @@
         </div>
       </section>
 
-      <!-- ================= 2. STEGANALYSIS LAB ================= -->
-      <section id="panel-steganalysis" class="section-panel">
+      <!-- ================= 2. PDF STEGANOGRAPHY ================= -->
+      <section id="panel-pdf-stego" class="section-panel">
         <div class="section-header">
-          <h2>🔬 Statistical Steganalysis & Intelligence Forensics</h2>
-          <p>Westfeld & Pfitzmann Chi-Square (χ²) Attack, Pairs-of-Values (PoVs) Equalization, Bit-Plane 0 Slicing, and Block Entropy.</p>
+          <h2>📄 PDF Document Steganography Studio</h2>
+          <p>Embeds encrypted payloads into standard PDF documents via incremental revision and comment streams. Documents display and print normally!</p>
         </div>
 
         <div class="grid-2">
           <div class="glass-card">
-            <h3 style="color:var(--cyan);margin-bottom:14px;">🎯 Forensic Target Ingestion</h3>
-            <div class="dropzone" data-preview="steg-target-preview">
-              <input type="file" id="steg-target-file" accept="image/png,image/jpeg">
-              <div class="dropzone-icon">🛰️</div>
-              <div class="dropzone-text">Upload Target Image for Statistical Inspection</div>
+            <h3 style="color:var(--cyan);margin-bottom:14px;">🔒 Hide Payload in PDF</h3>
+            <div class="form-group">
+              <label>Carrier PDF Document</label>
+              <input type="file" id="pdf-carrier-file" class="form-control" accept="application/pdf">
             </div>
-            <div id="steg-target-preview" class="preview-box">
-              <span style="color:var(--text-muted);font-family:var(--font-mono)">[Target Image Preview]</span>
+            <div class="form-group">
+              <label>Confidential Payload Text</label>
+              <textarea id="pdf-hide-text" class="form-control" rows="3" placeholder="Secret intelligence message to inject into PDF stream..."></textarea>
             </div>
-
-            <div class="dropzone" data-preview="steg-orig-preview" style="margin-top:14px;">
-              <input type="file" id="steg-orig-file" accept="image/png,image/jpeg">
-              <div class="dropzone-icon">📷</div>
-              <div class="dropzone-text">Upload Suspected Original Carrier (Optional for PSNR Delta)</div>
+            <div class="form-group">
+              <label>AES-256-GCM Password</label>
+              <input type="password" id="pdf-hide-pass" class="form-control" placeholder="Optional passphrase...">
             </div>
-
-            <button class="btn btn-primary btn-block" style="margin-top:18px;" onclick="executeSteganalysis()">
-              🔬 Run Statistical Steganalysis Attack
+            <button class="btn btn-primary btn-block" onclick="executePdfHide()">
+              📄 Inject & Download Protected PDF
             </button>
-            <div id="steg-status" style="font-family:var(--font-mono);font-size:0.8rem;margin-top:10px;color:var(--amber);"></div>
           </div>
 
           <div class="glass-card">
-            <h3 style="color:var(--cyan);margin-bottom:14px;">📈 Chi-Square & Forensic Telemetry</h3>
-            <div class="grid-3">
-              <div class="metric-tile">
-                <div class="label">Suspicion Score</div>
-                <div id="steg-score" class="val">-- %</div>
-              </div>
-              <div class="metric-tile">
-                <div class="label">Chi-Square (χ²)</div>
-                <div id="steg-chi" class="val">--</div>
-              </div>
-              <div class="metric-tile">
-                <div class="label">Shannon Entropy</div>
-                <div id="steg-entropy" class="val">-- bits</div>
-              </div>
+            <h3 style="color:var(--neon-green);margin-bottom:14px;">🔓 Extract Payload from PDF</h3>
+            <div class="form-group">
+              <label>Upload Protected PDF Document</label>
+              <input type="file" id="pdf-extract-file" class="form-control" accept="application/pdf">
             </div>
-
-            <!-- Chart.js Canvas -->
-            <div style="height:210px;width:100%;margin-top:18px;">
-              <canvas id="chiChart"></canvas>
+            <div class="form-group">
+              <label>Decryption Password</label>
+              <input type="password" id="pdf-extract-pass" class="form-control">
             </div>
+            <button class="btn btn-secondary btn-block" onclick="executePdfExtract()">
+              🔍 Scan & Extract Secret Payload
+            </button>
 
-            <h4 style="color:var(--electric-blue);margin-top:18px;font-size:0.85rem;font-family:var(--font-mono)">
-              BIT PLANE 0 (LSB SLICER) PREVIEW:
-            </h4>
-            <div id="steg-lsb-preview" class="preview-box" style="max-height:160px;min-height:140px;">
-              <span style="color:var(--text-muted);font-family:var(--font-mono)">[LSB Slicer Output]</span>
+            <div class="form-group" style="margin-top:14px;">
+              <label>Extracted Secret Message</label>
+              <textarea id="pdf-extract-result" class="form-control" rows="4" readonly></textarea>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ================= 3. 25+ FORENSIC EFFECTS GALLERY ================= -->
-      <section id="panel-effects" class="section-panel">
-        <div class="section-header">
-          <h2>🎨 25+ Forensic & Steganographic Effects Studio</h2>
-          <p>Scientific filters: Bit-Plane slicing, 2D FFT, DCT AC energy, Laplacian high-pass, ELA, and thermal false-color.</p>
-        </div>
-
-        <div class="glass-card">
-          <div class="grid-2">
-            <div>
-              <h4 style="color:var(--cyan);margin-bottom:8px;">1. Ingest Input Image</h4>
-              <div class="dropzone" data-preview="fx-in-preview">
-                <input type="file" id="fx-input-file" accept="image/png,image/jpeg">
-                <div class="dropzone-icon">🖼️</div>
-                <div class="dropzone-text">Drop or Select Image for Effect Application</div>
-              </div>
-              <div id="fx-in-preview" class="preview-box">
-                <span style="color:var(--text-muted);font-family:var(--font-mono)">[Input Image Preview]</span>
-              </div>
-            </div>
-
-            <div>
-              <h4 style="color:var(--magenta);margin-bottom:8px;">2. Real-Time Forensic Render</h4>
-              <div id="fx-out-preview" class="preview-box" style="min-height:300px;">
-                <span style="color:var(--text-muted);font-family:var(--font-mono)">[Select an effect below to render]</span>
-              </div>
-            </div>
-          </div>
-
-          <h3 style="color:#fff;margin-top:28px;font-size:1.05rem;">Available Filters & Forensic Operators (Click Any to Apply):</h3>
-          <div id="effects-container" class="effects-grid">
-            <!-- Dynamically populated from API -->
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= 4. INVISIBLE ZERO-WIDTH TEXT ================= -->
+      <!-- ================= 3. INVISIBLE ZERO-WIDTH TEXT ================= -->
       <section id="panel-text-stego" class="section-panel">
         <div class="section-header">
           <h2>📝 Invisible Zero-Width Text Steganography</h2>
@@ -356,7 +433,7 @@
         </div>
       </section>
 
-      <!-- ================= 5. AUDIO WAV STEGANOGRAPHY ================= -->
+      <!-- ================= 4. AUDIO WAV STEGANOGRAPHY ================= -->
       <section id="panel-audio-stego" class="section-panel">
         <div class="section-header">
           <h2>🎵 Audio WAV PCM Steganography Studio</h2>
@@ -366,13 +443,24 @@
         <div class="grid-2">
           <div class="glass-card">
             <h3 style="color:var(--cyan);margin-bottom:14px;">🎙️ Embed Payload in Audio</h3>
+            
+            <!-- Synthetic Tone Generator Helper -->
+            <div style="background:rgba(0,242,254,0.06);border:1px solid rgba(0,242,254,0.2);padding:10px;border-radius:8px;margin-bottom:14px;">
+              <span style="font-size:0.75rem;color:var(--cyan);font-family:var(--font-mono)">DON'T HAVE A WAV FILE? GENERATE ONE:</span>
+              <div style="display:flex;gap:8px;margin-top:6px;">
+                <button class="btn btn-secondary" style="padding:6px 12px;font-size:0.75rem;" onclick="generateSynthAudio('ambient')">Cyber Ambient</button>
+                <button class="btn btn-secondary" style="padding:6px 12px;font-size:0.75rem;" onclick="generateSynthAudio('sine')">440Hz Sine</button>
+                <button class="btn btn-secondary" style="padding:6px 12px;font-size:0.75rem;" onclick="generateSynthAudio('binaural')">Binaural Beat</button>
+              </div>
+            </div>
+
             <div class="form-group">
               <label>Select 16-bit PCM WAV File</label>
               <input type="file" id="aud-carrier" class="form-control" accept="audio/wav">
             </div>
             <div class="form-group">
               <label>Secret Message</label>
-              <textarea id="aud-secret-msg" class="form-control" rows="3" placeholder="Secret intelligence message to embed into waveform..."></textarea>
+              <textarea id="aud-secret-msg" class="form-control" rows="3" placeholder="Secret message to embed into waveform..."></textarea>
             </div>
             <div class="form-group">
               <label>AES-256-GCM Password (Optional)</label>
@@ -404,7 +492,7 @@
         </div>
       </section>
 
-      <!-- ================= 6. POLYGLOT / EOF FILE CARVING ================= -->
+      <!-- ================= 5. POLYGLOT / EOF FILE CARVING ================= -->
       <section id="panel-eof-stego" class="section-panel">
         <div class="section-header">
           <h2>📦 Polyglot & EOF File-Carving Steganography</h2>
@@ -429,40 +517,171 @@
             <label>Encryption Password</label>
             <input type="password" id="eof-pass" class="form-control" placeholder="Password protects the polyglot file payload...">
           </div>
-          <button class="btn btn-primary" onclick="alert('Polyglot embedding API ready! Selected files will be processed by backend.')">
+          <button class="btn btn-primary" onclick="alert('Polyglot embedding ready! Ingestion handled via universal API.')">
             📦 Pack Polyglot Carrier
           </button>
         </div>
       </section>
 
-      <!-- ================= 7. JNTUK PROJECT 20 GUIDE & VIVA ================= -->
-      <section id="panel-viva-guide" class="section-panel">
+      <!-- ================= 6. STEGANALYSIS & CHI-SQUARE LAB ================= -->
+      <section id="panel-steganalysis" class="section-panel">
         <div class="section-header">
-          <h2>🎓 JNTUK R23 Project 20 Reference & Judge Presentation Guide</h2>
-          <p>Academic alignment, theoretical proofs, and anticipated viva examination questions.</p>
+          <h2>🔬 Statistical Steganalysis & Chi-Square (χ²) Lab</h2>
+          <p>Westfeld & Pfitzmann Chi-Square Attack, Pairs-of-Values (PoVs) Equalization, Bit-Plane 0 Slicing, and Block Entropy.</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="glass-card">
+            <h3 style="color:var(--cyan);margin-bottom:14px;">🎯 Forensic Target Ingestion</h3>
+            <div class="dropzone" data-preview="steg-target-preview">
+              <input type="file" id="steg-target-file" accept="image/png,image/jpeg">
+              <div class="dropzone-icon">🛰️</div>
+              <div class="dropzone-text">Upload Target Image for Statistical Inspection</div>
+            </div>
+            <div id="steg-target-preview" class="preview-box">
+              <span style="color:var(--text-muted);font-family:var(--font-mono)">[Target Image Preview]</span>
+            </div>
+
+            <div class="dropzone" data-preview="steg-orig-preview" style="margin-top:14px;">
+              <input type="file" id="steg-orig-file" accept="image/png,image/jpeg">
+              <div class="dropzone-icon">📷</div>
+              <div class="dropzone-text">Upload Suspected Original Carrier (Optional for PSNR Delta)</div>
+            </div>
+
+            <button class="btn btn-primary btn-block" style="margin-top:18px;" onclick="executeSteganalysis()">
+              🔬 Run Statistical Steganalysis Attack
+            </button>
+            <div id="steg-status" style="font-family:var(--font-mono);font-size:0.8rem;margin-top:10px;color:var(--amber);"></div>
+          </div>
+
+          <div class="glass-card">
+            <h3 style="color:var(--cyan);margin-bottom:14px;">📈 Chi-Square & Forensic Telemetry</h3>
+            <div class="grid-3">
+              <div class="metric-tile">
+                <div class="label">Suspicion Score</div>
+                <div id="steg-score" class="val">-- %</div>
+              </div>
+              <div class="metric-tile">
+                <div class="label">Chi-Square (χ²)</div>
+                <div id="steg-chi" class="val">--</div>
+              </div>
+              <div class="metric-tile">
+                <div class="label">Shannon Entropy</div>
+                <div id="steg-entropy" class="val">-- bits</div>
+              </div>
+            </div>
+
+            <div style="height:210px;width:100%;margin-top:18px;">
+              <canvas id="chiChart"></canvas>
+            </div>
+
+            <h4 style="color:var(--electric-blue);margin-top:18px;font-size:0.85rem;font-family:var(--font-mono)">
+              BIT PLANE 0 (LSB SLICER) PREVIEW:
+            </h4>
+            <div id="steg-lsb-preview" class="preview-box" style="max-height:160px;min-height:140px;">
+              <span style="color:var(--text-muted);font-family:var(--font-mono)">[LSB Slicer Output]</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 7. BATCH SCANNER ================= -->
+      <section id="panel-batch-scanner" class="section-panel">
+        <div class="section-header">
+          <h2>🛰️ Automated Batch Multi-Image Steganalysis Scanner</h2>
+          <p>Scan an entire directory of carrier images simultaneously to detect anomalous PoV equalizations and hidden payloads.</p>
         </div>
 
         <div class="glass-card">
-          <h3 style="color:var(--cyan);margin-bottom:12px;">Syllabus Mapping: Project 20</h3>
-          <ul style="color:var(--text-muted);line-height:1.7;margin-left:20px;font-size:0.88rem;">
-            <li><strong style="color:#fff;">Syllabus Units:</strong> Cyber Security U2 — steganography | Python U1+U2 — data types, file ops, functions.</li>
-            <li><strong style="color:#fff;">Industry Problem:</strong> An intelligence training institute needs to teach analysts how criminals hide messages inside innocent-looking images and how to detect hidden content using pixel-level statistical analysis.</li>
-            <li><strong style="color:#fff;">What Students Learn:</strong> LSB steganography technique; steganalysis via histogram analysis; PIL image manipulation.</li>
-            <li><strong style="color:#fff;">Expected Output:</strong> Dual steganography tool — image message encoder + statistical hidden-message detector.</li>
-          </ul>
+          <div class="dropzone">
+            <input type="file" id="batch-files-input" multiple accept="image/png,image/jpeg">
+            <div class="dropzone-icon">📁</div>
+            <div class="dropzone-text">Select Multiple Images for Simultaneous Batch Steganalysis</div>
+          </div>
 
-          <hr style="border:none;border-top:1px solid rgba(255,255,255,0.1);margin:20px 0;">
+          <button class="btn btn-primary btn-block" style="margin-top:14px;" onclick="executeBatchScan()">
+            🛰️ Start Automated Batch Intelligence Scan
+          </button>
 
-          <h3 style="color:var(--magenta);margin-bottom:12px;">🎯 Quick Viva Answers for Examination Judges</h3>
-          <div style="font-size:0.85rem;line-height:1.6;color:var(--text-main);">
-            <p><strong>Q: Why does LSB modification not corrupt the image visually?</strong><br>
-            <span style="color:var(--text-muted);">A: 8-bit color channels range from 0 to 255. Altering the 0th bit changes the intensity by at most ±1 part in 256 (~0.39%), which falls far below the Just Noticeable Difference (JND) threshold of human eye photoreceptors.</span></p>
-            <br>
-            <p><strong>Q: How does Westfeld-Pfitzmann Chi-Square detection work?</strong><br>
-            <span style="color:var(--text-muted);">A: In natural photos, the histogram of even/odd pairs (2k, 2k+1) is asymmetric. Sequential LSB steganography uniformly flips 0s and 1s, equalizing frequencies between 2k and 2k+1. The Chi-Square statistic measures the probability that observed counts match an equalized distribution. High probability (>65%) statistically proves stego presence.</span></p>
-            <br>
-            <p><strong>Q: How does PRNG Scattering defeat Chi-Square attacks?</strong><br>
-            <span style="color:var(--text-muted);">A: Traditional Chi-Square attacks evaluate sequential blocks from top-left. StegnoFlow uses a cryptographic keystream to scatter bit coordinates pseudorandomly across the entire image space, maintaining low local density and evading linear scanning detectors.</span></p>
+          <div id="batch-results-container" style="margin-top:20px;display:none;">
+            <table style="width:100%;border-collapse:collapse;font-family:var(--font-mono);font-size:0.8rem;">
+              <thead>
+                <tr style="border-bottom:1px solid var(--border-neon);color:var(--cyan);text-align:left;">
+                  <th style="padding:10px;">Filename</th>
+                  <th style="padding:10px;">Suspicion</th>
+                  <th style="padding:10px;">Risk Level</th>
+                  <th style="padding:10px;">Chi-Square</th>
+                  <th style="padding:10px;">Verdict</th>
+                </tr>
+              </thead>
+              <tbody id="batch-results-tbody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 8. 26+ FORENSIC EFFECTS GALLERY ================= -->
+      <section id="panel-effects" class="section-panel">
+        <div class="section-header">
+          <h2>🎨 26+ Forensic & Visual Steganography Effects Studio</h2>
+          <p>Scientific filters: Bit-Plane slicing, 2D FFT, DCT AC energy, Laplacian high-pass, ELA, and thermal false-color.</p>
+        </div>
+
+        <div class="glass-card">
+          <div class="grid-2">
+            <div>
+              <h4 style="color:var(--cyan);margin-bottom:8px;">1. Ingest Input Image</h4>
+              <div class="dropzone" data-preview="fx-in-preview">
+                <input type="file" id="fx-input-file" accept="image/png,image/jpeg">
+                <div class="dropzone-icon">🖼️</div>
+                <div class="dropzone-text">Drop or Select Image for Effect Application</div>
+              </div>
+              <div id="fx-in-preview" class="preview-box">
+                <span style="color:var(--text-muted);font-family:var(--font-mono)">[Input Image Preview]</span>
+              </div>
+            </div>
+
+            <div>
+              <h4 style="color:var(--magenta);margin-bottom:8px;">2. Real-Time Forensic Render</h4>
+              <div id="fx-out-preview" class="preview-box" style="min-height:300px;">
+                <span style="color:var(--text-muted);font-family:var(--font-mono)">[Select an effect below to render]</span>
+              </div>
+            </div>
+          </div>
+
+          <h3 style="color:#fff;margin-top:28px;font-size:1.05rem;">Available Filters & Forensic Operators (Click Any to Apply):</h3>
+          <div id="effects-container" class="effects-grid">
+            <!-- Dynamically populated from API -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 9. SPLIT SCREEN COMPARISON SLIDER ================= -->
+      <section id="panel-split-compare" class="section-panel">
+        <div class="section-header">
+          <h2>👁️ Split-Screen Forensic Comparison Slider</h2>
+          <p>Drag the interactive divider to inspect micro-deviations between original cover and stego carrier.</p>
+        </div>
+
+        <div class="glass-card">
+          <div class="grid-2" style="margin-bottom:14px;">
+            <div>
+              <label style="font-size:0.75rem;color:var(--cyan);font-family:var(--font-mono)">BEFORE IMAGE (ORIGINAL):</label>
+              <input type="file" id="split-before-input" class="form-control" accept="image/png,image/jpeg">
+            </div>
+            <div>
+              <label style="font-size:0.75rem;color:var(--magenta);font-family:var(--font-mono)">AFTER IMAGE (STEGO):</label>
+              <input type="file" id="split-after-input" class="form-control" accept="image/png,image/jpeg">
+            </div>
+          </div>
+
+          <div class="split-viewer-container" id="split-viewer">
+            <img id="split-img-before" class="split-img-before" src="" alt="Before" style="display:none;">
+            <div id="split-img-after-wrapper" class="split-img-after">
+              <img id="split-img-after" src="" alt="After" style="display:none;">
+            </div>
+            <input type="range" min="0" max="100" value="50" class="split-slider" id="split-slider-ctrl" oninput="updateSplitSlider(this.value)">
           </div>
         </div>
       </section>

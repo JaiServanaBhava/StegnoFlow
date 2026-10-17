@@ -195,5 +195,3 @@ As the calculated $p$-value approaches 1.0, the presence of steganography is sta
 
 ---
 
-## 📄 License
-This project is open-source under the [MIT License](LICENSE).
